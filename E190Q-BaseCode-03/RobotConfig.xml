@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone="yes"?>
+<RobotConfig xmlns="http://tempuri.org/RobotConfig.xsd">
+  <RobotConfigTable>
+    <RobotID>DrRobot</RobotID>
+    <RobotIP>192.168.0.229</RobotIP>
+    <Port1>10001</Port1>
+    <Port2>10002</Port2>
+    <GPSIP>192.168.0.230</GPSIP>
+    <GPSPort>10001</GPSPort>
+    <CameraIP>192.168.0.199</CameraIP>
+    <CameraPort>8081</CameraPort>
+    <CameraPWD>drrobot</CameraPWD>
+    <CameraUser>root</CameraUser>
+  </RobotConfigTable>
+</RobotConfig>

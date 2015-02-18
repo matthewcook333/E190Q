@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="RobotConfig" targetNamespace="http://tempuri.org/RobotConfig.xsd" xmlns:mstns="http://tempuri.org/RobotConfig.xsd" xmlns="http://tempuri.org/RobotConfig.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="RobotConfig" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="RobotConfig" msprop:Generator_DataSetName="RobotConfig" msprop:EnableTableAdapterManager="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="RobotConfigTable" msprop:Generator_UserTableName="RobotConfigTable" msprop:Generator_RowDeletedName="RobotConfigTableRowDeleted" msprop:Generator_RowChangedName="RobotConfigTableRowChanged" msprop:Generator_RowClassName="RobotConfigTableRow" msprop:Generator_RowChangingName="RobotConfigTableRowChanging" msprop:Generator_RowEvArgName="RobotConfigTableRowChangeEvent" msprop:Generator_RowEvHandlerName="RobotConfigTableRowChangeEventHandler" msprop:Generator_TableClassName="RobotConfigTableDataTable" msprop:Generator_TableVarName="tableRobotConfigTable" msprop:Generator_RowDeletingName="RobotConfigTableRowDeleting" msprop:Generator_TablePropName="RobotConfigTable">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="RobotID" msprop:Generator_UserColumnName="RobotID" msprop:Generator_ColumnPropNameInRow="RobotID" msprop:Generator_ColumnVarNameInTable="columnRobotID" msprop:Generator_ColumnPropNameInTable="RobotIDColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="RobotIP" msprop:Generator_UserColumnName="RobotIP" msprop:Generator_ColumnPropNameInRow="RobotIP" msprop:Generator_ColumnVarNameInTable="columnRobotIP" msprop:Generator_ColumnPropNameInTable="RobotIPColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Port1" msprop:Generator_UserColumnName="Port1" msprop:Generator_ColumnPropNameInRow="Port1" msprop:Generator_ColumnVarNameInTable="columnPort1" msprop:Generator_ColumnPropNameInTable="Port1Column" type="xs:int" minOccurs="0" />
+              <xs:element name="Port2" msprop:Generator_UserColumnName="Port2" msprop:Generator_ColumnPropNameInRow="Port2" msprop:Generator_ColumnVarNameInTable="columnPort2" msprop:Generator_ColumnPropNameInTable="Port2Column" type="xs:int" minOccurs="0" />
+              <xs:element name="GPSIP" msprop:Generator_UserColumnName="GPSIP" msprop:Generator_ColumnPropNameInRow="GPSIP" msprop:Generator_ColumnVarNameInTable="columnGPSIP" msprop:Generator_ColumnPropNameInTable="GPSIPColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="GPSPort" msprop:Generator_UserColumnName="GPSPort" msprop:Generator_ColumnPropNameInRow="GPSPort" msprop:Generator_ColumnVarNameInTable="columnGPSPort" msprop:Generator_ColumnPropNameInTable="GPSPortColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="CameraIP" msprop:Generator_UserColumnName="CameraIP" msprop:Generator_ColumnPropNameInRow="CameraIP" msprop:Generator_ColumnVarNameInTable="columnCameraIP" msprop:Generator_ColumnPropNameInTable="CameraIPColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="CameraPort" msprop:Generator_UserColumnName="CameraPort" msprop:Generator_ColumnPropNameInRow="CameraPort" msprop:Generator_ColumnVarNameInTable="columnCameraPort" msprop:Generator_ColumnPropNameInTable="CameraPortColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="CameraPWD" msprop:Generator_UserColumnName="CameraPWD" msprop:Generator_ColumnPropNameInRow="CameraPWD" msprop:Generator_ColumnVarNameInTable="columnCameraPWD" msprop:Generator_ColumnPropNameInTable="CameraPWDColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="CameraUser" msprop:Generator_UserColumnName="CameraUser" msprop:Generator_ColumnVarNameInTable="columnCameraUser" msprop:Generator_ColumnPropNameInRow="CameraUser" msprop:Generator_ColumnPropNameInTable="CameraUserColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="AimCameraIP" msprop:Generator_UserColumnName="AimCameraIP" msprop:Generator_ColumnPropNameInRow="AimCameraIP" msprop:Generator_ColumnVarNameInTable="columnAimCameraIP" msprop:Generator_ColumnPropNameInTable="AimCameraIPColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="AimCameraPort" msprop:Generator_UserColumnName="AimCameraPort" msprop:Generator_ColumnPropNameInRow="AimCameraPort" msprop:Generator_ColumnVarNameInTable="columnAimCameraPort" msprop:Generator_ColumnPropNameInTable="AimCameraPortColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="AimCameraPWD" msprop:Generator_UserColumnName="AimCameraPWD" msprop:Generator_ColumnPropNameInRow="AimCameraPWD" msprop:Generator_ColumnVarNameInTable="columnAimCameraPWD" msprop:Generator_ColumnPropNameInTable="AimCameraPWDColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="AimCameraUser" msprop:Generator_UserColumnName="AimCameraUser" msprop:Generator_ColumnPropNameInRow="AimCameraUser" msprop:Generator_ColumnVarNameInTable="columnAimCameraUser" msprop:Generator_ColumnPropNameInTable="AimCameraUserColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="IMUIP" msprop:Generator_UserColumnName="IMUIP" msprop:Generator_ColumnVarNameInTable="columnIMUIP" msprop:Generator_ColumnPropNameInRow="IMUIP" msprop:Generator_ColumnPropNameInTable="IMUIPColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="IMUPort" msprop:Generator_UserColumnName="IMUPort" msprop:Generator_ColumnVarNameInTable="columnIMUPort" msprop:Generator_ColumnPropNameInRow="IMUPort" msprop:Generator_ColumnPropNameInTable="IMUPortColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="LaserRangeIP" msprop:Generator_UserColumnName="LaserRangeIP" msprop:Generator_ColumnVarNameInTable="columnLaserRangeIP" msprop:Generator_ColumnPropNameInRow="LaserRangeIP" msprop:Generator_ColumnPropNameInTable="LaserRangeIPColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="LaserRangePort" msprop:Generator_UserColumnName="LaserRangePort" msprop:Generator_ColumnVarNameInTable="columnLaserRangePort" msprop:Generator_ColumnPropNameInRow="LaserRangePort" msprop:Generator_ColumnPropNameInTable="LaserRangePortColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="GoogleEarthStartLat" msprop:Generator_UserColumnName="GoogleEarthStartLat" msprop:Generator_ColumnPropNameInRow="GoogleEarthStartLat" msprop:Generator_ColumnVarNameInTable="columnGoogleEarthStartLat" msprop:Generator_ColumnPropNameInTable="GoogleEarthStartLatColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="GoogleEarthStartLong" msprop:Generator_UserColumnName="GoogleEarthStartLong" msprop:Generator_ColumnPropNameInRow="GoogleEarthStartLong" msprop:Generator_ColumnVarNameInTable="columnGoogleEarthStartLong" msprop:Generator_ColumnPropNameInTable="GoogleEarthStartLongColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="RobotType" msprop:Generator_UserColumnName="RobotType" msprop:Generator_ColumnVarNameInTable="columnRobotType" msprop:Generator_ColumnPropNameInRow="RobotType" msprop:Generator_ColumnPropNameInTable="RobotTypeColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="MotorDir" msprop:Generator_UserColumnName="MotorDir" msprop:Generator_ColumnPropNameInRow="MotorDir" msprop:Generator_ColumnVarNameInTable="columnMotorDir" msprop:Generator_ColumnPropNameInTable="MotorDirColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="Wheel_CNT" msprop:Generator_UserColumnName="Wheel_CNT" msprop:Generator_ColumnPropNameInRow="Wheel_CNT" msprop:Generator_ColumnVarNameInTable="columnWheel_CNT" msprop:Generator_ColumnPropNameInTable="Wheel_CNTColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="Wheel_R" msprop:Generator_UserColumnName="Wheel_R" msprop:Generator_ColumnPropNameInRow="Wheel_R" msprop:Generator_ColumnVarNameInTable="columnWheel_R" msprop:Generator_ColumnPropNameInTable="Wheel_RColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="Wheel_DIS" msprop:Generator_UserColumnName="Wheel_DIS" msprop:Generator_ColumnPropNameInRow="Wheel_DIS" msprop:Generator_ColumnVarNameInTable="columnWheel_DIS" msprop:Generator_ColumnPropNameInTable="Wheel_DISColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="MinDiffPWM" msprop:Generator_UserColumnName="MinDiffPWM" msprop:Generator_ColumnPropNameInRow="MinDiffPWM" msprop:Generator_ColumnVarNameInTable="columnMinDiffPWM" msprop:Generator_ColumnPropNameInTable="MinDiffPWMColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="DrvThrottle" msprop:Generator_UserColumnName="DrvThrottle" msprop:Generator_ColumnPropNameInRow="DrvThrottle" msprop:Generator_ColumnVarNameInTable="columnDrvThrottle" msprop:Generator_ColumnPropNameInTable="DrvThrottleColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="TurnDir" msprop:Generator_UserColumnName="TurnDir" msprop:Generator_ColumnPropNameInRow="TurnDir" msprop:Generator_ColumnVarNameInTable="columnTurnDir" msprop:Generator_ColumnPropNameInTable="TurnDirColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="TurnK" msprop:Generator_UserColumnName="TurnK" msprop:Generator_ColumnPropNameInRow="TurnK" msprop:Generator_ColumnVarNameInTable="columnTurnK" msprop:Generator_ColumnPropNameInTable="TurnKColumn" type="xs:double" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
