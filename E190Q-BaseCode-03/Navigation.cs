@@ -17,7 +17,7 @@ namespace DrRobot.JaguarControl
         public double desiredX, desiredY, desiredT;
 
         public Boolean withinEpsilon = false;
-        public long lastUpdate;
+        public long lastUpdate = 0;
 
         public double currentEncoderPulseL, currentEncoderPulseR;
         public double lastEncoderPulseL, lastEncoderPulseR;
@@ -358,9 +358,9 @@ namespace DrRobot.JaguarControl
         }
         public void CalcMotorSignals()
         {
-            if (lastUpdate == null)
+            if (lastUpdate == 0)
             {
-                lastUpdate = DateTime.Now.Ticks - 10;
+                lastUpdate = DateTime.Now.Ticks - 100000;
             }
             int timeDiff = (int)((DateTime.Now.Ticks - lastUpdate)/10000);
             Console.WriteLine("DELTA T BADBY: " + timeDiff);
@@ -372,11 +372,11 @@ namespace DrRobot.JaguarControl
             double K_i = 0.1;
             double K_d = 1;
 
-            double maxErr = 8000 / deltaT;
+            double maxErr = 8000 / timeDiff;
 
 
-            e_L = desiredRotRateL - diffEncoderPulseL / deltaT;
-            e_R = desiredRotRateR - diffEncoderPulseR / deltaT;
+            e_L = desiredRotRateL - diffEncoderPulseL / timeDiff;
+            e_R = desiredRotRateR - diffEncoderPulseR / timeDiff;
 
             e_sum_L = .9 * e_sum_L + e_L * deltaT;
             e_sum_R = .9 * e_sum_R + e_R * deltaT;
@@ -384,10 +384,10 @@ namespace DrRobot.JaguarControl
             e_sum_L = Math.Max(-maxErr, Math.Min(e_sum_L, maxErr));
             e_sum_R = Math.Max(-maxErr, Math.Min(e_sum_R, maxErr));
 
-            u_L = ((K_p * e_L) + (K_i * e_sum_L) + (K_d * (e_L - e_L_last) / deltaT));
+            u_L = ((K_p * e_L) + (K_i * e_sum_L) + (K_d * (e_L - e_L_last) / timeDiff));
             e_L_last = e_L;
 
-            u_R = ((K_p * e_R) + (K_i * e_sum_R) + (K_d * (e_R - e_R_last) / deltaT));
+            u_R = ((K_p * e_R) + (K_i * e_sum_R) + (K_d * (e_R - e_R_last) / timeDiff));
             e_R_last = e_R;
             // The following settings are used to help develop the controller in simulation.
             // They will be replaced when the actual jaguar is used.
@@ -521,7 +521,9 @@ namespace DrRobot.JaguarControl
                 isBackwards = -1;
             }
 
-            double beta = AngleDiff(t_est, - alpha) + desiredT;
+            double beta = AngleDiff(t_est, -alpha);
+            // adding desired T
+            beta = AngleDiff(-desiredT, beta);
 
             double desiredV = isBackwards * Kpho * pho;
             double desiredW = Kalpha * alpha + Kbeta * beta;
@@ -530,6 +532,18 @@ namespace DrRobot.JaguarControl
             double omega1 = desiredW - omega2;
             double desiredVelR = omega1 * 2 * robotRadius / wheelRadius;
             double desiredVelL = omega2 * 2 * robotRadius / wheelRadius;
+            double maxRadVel = maxVelocity / wheelRadius;
+            if (Math.Abs(desiredVelR) > maxRadVel)
+            {
+                desiredVelL = maxRadVel * desiredVelL / Math.Abs(desiredVelR);
+                desiredVelR = (desiredVelR < 0) ? -maxRadVel : maxRadVel;         
+            }
+            if (Math.Abs(desiredVelL) > maxRadVel)
+            {
+                desiredVelR = maxRadVel * desiredVelR / Math.Abs(desiredVelL);
+                desiredVelL = (desiredVelL < 0) ? -maxRadVel : maxRadVel;
+            }
+
             desiredRotRateL = (short)-(desiredVelL/(2*Math.PI)*pulsesPerRotation);
             desiredRotRateR = (short)(desiredVelR/(2*Math.PI)*pulsesPerRotation);
 
