@@ -363,13 +363,17 @@ namespace DrRobot.JaguarControl
                 lastUpdate = DateTime.Now.Ticks - 100000;
             }
             int timeDiff = (int)((DateTime.Now.Ticks - lastUpdate)/10000);
-            Console.WriteLine("DELTA T BADBY: " + timeDiff);
 
             short zeroOutput = 16383;
             short maxPosOutput = 32767;
-
-            double K_p = 25;
-            double K_i = 0.1;
+            /*
+            double K_u = 120;
+            double T_u = 15;
+            double K_p = 0.6 * K_u;// 25;
+            double K_i = 2*K_p/T_u;// 0.1;
+            double K_d = K_p*T_u/8;// 1;*/
+            double K_p = 70;// 25;
+            double K_i = 7;// 5;// 0.1;
             double K_d = 1;
 
             double maxErr = 8000 / timeDiff;
@@ -547,7 +551,7 @@ namespace DrRobot.JaguarControl
             desiredRotRateL = (short)-(desiredVelL/(2*Math.PI)*pulsesPerRotation);
             desiredRotRateR = (short)(desiredVelR/(2*Math.PI)*pulsesPerRotation);
 
-            if (Math.Abs(pho) < .05)
+            if (Math.Abs(pho) < .1)
             {
                 withinEpsilon = true;
             }
@@ -555,7 +559,7 @@ namespace DrRobot.JaguarControl
             if (withinEpsilon)
             {
                 double thetaError = AngleDiff(desiredT, t_est);
-                double epsilon = 0.05;
+                double epsilon = 0.75;
 
                 if (thetaError > 0 && Math.Abs(thetaError) > epsilon)
                 {
