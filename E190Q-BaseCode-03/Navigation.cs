@@ -206,10 +206,10 @@ namespace DrRobot.JaguarControl
                     //WallPositioning();
 
                     // Drive the robot to a desired Point (lab 3)
-                    //FlyToSetPoint();
+                    FlyToSetPoint();
 
                     // Follow the trajectory instead of a desired point (lab 3)
-                    TrackTrajectory();
+                    //TrackTrajectory();
 
                     // Actuate motors based actuateMotorL and actuateMotorR
                     if (jaguarControl.Simulating())
@@ -366,12 +366,20 @@ namespace DrRobot.JaguarControl
 
             short zeroOutput = 16383;
             short maxPosOutput = 32767;
+
+            double K_u = 163;// 140;
+            double T_u = 29;// 8;
+            double K_p = 0.6 * K_u;// 0.60 * K_u;// 25;
+            double K_i =  2 * K_p / T_u;// 0.1;
+            double K_d = K_p * T_u / 8;// 1;*/
             
+            /*
+            LOPEZ VALUES
             double K_u = 120;
             double T_u = 35;
             double K_p = 0.60 * K_u;// 25;
             double K_i = 2*K_p/ T_u;// 0.1;
-            double K_d = K_p*T_u/8;// 1;
+            double K_d = K_p*T_u/8;// 1;*/
             /*
             double K_p = 70;// 25;
             double K_i = 7;// 5;// 0.1;
@@ -561,7 +569,7 @@ namespace DrRobot.JaguarControl
             {
                 double thetaError = AngleDiff(desiredT, t_est);
                 double epsilon = 0.175;
-                short spinSpeed = 70;
+                short spinSpeed = (short)(65 + Math.Abs(thetaError) * 15 / Math.PI);
 
                 if (thetaError > 0 && Math.Abs(thetaError) > epsilon)
                 {
@@ -602,7 +610,9 @@ namespace DrRobot.JaguarControl
         }
 
 
-        private double[] waypoints = { 1, 1, 1, 2, 2, 0, 3, 1, -1.5, 2, 0, -2, 0, -1, 3.14 };
+       // private double[] waypoints = { 1, 1, 1, 2, 2, 0, 3, 1, -1.5, 2, 0, -2, 0, -1, 3.14 };
+        private double[] waypoints = { 3, 1, 1, 4, 2, 0, 5, 1, -1.5, 4, 0, -2, 0, -1, 3.14 };
+
         private int currentWaypoint = 0;
         // THis function is called to follow a trajectory constructed by PRMMotionPlanner()
         private void TrackTrajectory()
@@ -615,7 +625,7 @@ namespace DrRobot.JaguarControl
             double deltaY = desiredY - y_est;
             double distToDest = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
             //Console.WriteLine("DistToDest: " + distToDest);
-            if (distToDest < 0.15 && currentWaypoint < waypoints.Length - 3) {
+            if (distToDest < 0.66 && currentWaypoint < waypoints.Length - 3) {
                 currentWaypoint += 3;
                 desiredX = waypoints[currentWaypoint];
                 desiredY = waypoints[currentWaypoint + 1];
