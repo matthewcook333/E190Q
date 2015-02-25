@@ -59,6 +59,8 @@ namespace DrRobot.JaguarControl
         double time = 0;
         DateTime startTime;
 
+        private string streamPath_;
+
         public short K_P = 15;//15;
         public short K_I = 0;//0;
         public short K_D = 3;//3;
@@ -455,7 +457,11 @@ namespace DrRobot.JaguarControl
             //int fileCnt= 0;
             String date = DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Day.ToString() + "-" + DateTime.Now.Minute.ToString();
             ToString();
-            logFile = File.CreateText("JaguarData_" + date + ".txt");
+            streamPath_ = "JaguarData_AM_" + date + ".csv";
+            logFile = File.CreateText(streamPath_);
+            string header = "time, x, y, t";
+            logFile.WriteLine(header);
+            logFile.Close();
             startTime = DateTime.Now;
             loggingOn = true;
         }
@@ -478,9 +484,12 @@ namespace DrRobot.JaguarControl
             {
                 TimeSpan ts = DateTime.Now - startTime;
                 time = ts.TotalSeconds;
-                 String newData = time.ToString() + " " + x.ToString() + " " + y.ToString() + " " + t.ToString() ;
+                //double distanceFromWall = LaserData[113];
+                String newData = time.ToString() + ", " + x.ToString() + ", " + y.ToString() + ", " + t.ToString();
 
+                logFile = File.AppendText(streamPath_);
                 logFile.WriteLine(newData);
+                logFile.Close();
             }
         }
         #endregion
