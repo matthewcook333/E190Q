@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="JaguarControl">
+</Property><Property Name="Solution File" Value="C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\JaguarControl.sln">
+</Property><Property Name="Date" Value="Monday, October 29, 2012">
+</Property><Property Name="Time" Value="16:19:58 PM">
+</Property></Properties><Event ErrorLevel="0" Project="JaguarControl" Source="JaguarControl.csproj" Description="Project file successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\JaguarControl.csproj">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="ArmPositionIndicatorControl.cs" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\ArmPositionIndicatorControl.cs">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="DrRobotRobotConnection.cs" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\DrRobotRobotConnection.cs">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="DrRobotRobotConnection.designer.cs" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\DrRobotRobotConnection.designer.cs">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="IMUGPSComm.cs" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\IMUGPSComm.cs">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="InstrumentControl.cs" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\InstrumentControl.cs">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="JaguarCtrl.cs" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\JaguarCtrl.cs">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="JaguarCtrl.Designer.cs" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\JaguarCtrl.Designer.cs">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="JaguarCtrlResource.Designer.cs" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\JaguarCtrlResource.Designer.cs">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="LaserScan.cs" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\LaserScan.cs">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="Program.cs" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\Program.cs">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="Properties\AssemblyInfo.cs" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="Properties\Resources.Designer.cs" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\Properties\Resources.Designer.cs">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="Properties\Settings.Designer.cs" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\Properties\Settings.Designer.cs">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="RobotConfig.Designer.cs" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\RobotConfig.Designer.cs">
+</Event><Event ErrorLevel="2" Project="JaguarControl" Source="Properties\Settings.settings" Description="Failed to backup file as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\Properties\Settings.settings">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="RobotConfig.xsc" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\RobotConfig.xsc">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="RobotConfig.xsd" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\RobotConfig.xsd">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="RobotConfig.xss" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\RobotConfig.xss">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="Resources\jaguar_Arm.bmp" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\Resources\jaguar_Arm.bmp">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="Resources\jaguar_arm_M.bmp" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\Resources\jaguar_arm_M.bmp">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="Resources\jaguar_arm_M1.bmp" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\Resources\jaguar_arm_M1.bmp">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="tank_jaguar.ico" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\tank_jaguar.ico">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="DrRobotRobotConnection.resx" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\DrRobotRobotConnection.resx">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="JaguarCtrl.resx" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\JaguarCtrl.resx">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="JaguarCtrlResource.resx" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\JaguarCtrlResource.resx">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="Properties\Resources.resx" Description="File successfully backed up as C:\Program Files (x86)\Dr Robot Inc\Dr Robot Jaguar Control\sourcecode\Backup\Properties\Resources.resx">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="JaguarControl.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="JaguarControl" Source="JaguarControl.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="JaguarControl" Source="JaguarControl.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>
