@@ -104,12 +104,56 @@ namespace DrRobot.JaguarControl
         // SENSOR ORIENTATION (t)
         double GetWallDistance(double x, double y, double t, int segment){
 
+            double wallX1 = mapSegmentCorners[segment, 0, 0];
+            double wallY1 = mapSegmentCorners[segment, 0, 1];
+            double wallX2 = mapSegmentCorners[segment, 1, 0];
+            double wallY2 = mapSegmentCorners[segment, 1, 1];
+
+            double pointSlope = Math.Tan(t);
+            double pointIntercept = y - pointSlope * x;
+
+            // calculation taken from community.topcoder.com/tc?module=Static&d1=tutorials&d2=geometry2
+            double delta = (-pointSlope * 1) - (-slopes[segment]) * 1;
+            if (delta == 0)
+            {
+                // lines are parallel, there is no intersection
+                return double.PositiveInfinity;
+            }
+            double xIntersect = ((1 * pointIntercept) - (1 * intercepts[segment])) / delta;
+            double yIntersect = ((-pointSlope * intercepts[segment]) - (-slopes[segment] * pointIntercept)) / delta;
 
 
 
-	        // ****************** Additional Student Code: End   ************
+            double epsilon = 0.05;
+            // checking if intersection is within wall segment
+            if ((xIntersect >= wallX1 - epsilon  && xIntersect <= wallX2 + epsilon) 
+                || (xIntersect <= wallX1 + epsilon && xIntersect >= wallX2 - epsilon))
+            {
+                if ((yIntersect >= wallY1 - epsilon && yIntersect <= wallY2 + epsilon) 
+                    || (yIntersect <= wallY1 + epsilon && yIntersect >= wallY2 - epsilon))
+                {
+                    double dist = Math.Sqrt(Math.Pow(xIntersect - x, 2) + Math.Pow(yIntersect - y, 2));
+                    //if (segment == 2)
+                    //{
+                    //    Console.WriteLine("getting herrr with: " + xIntersect + ", " + yIntersect);
+                    //    Console.WriteLine("and dist: " + dist);
+                    //}
+                    return dist;
+                }
+            }
+            /*
+            if ((xIntersect >= wallX1 && xIntersect <= wallX2) || (xIntersect <= wallX1 && xIntersect >= wallX2))
+            {
+                if ((yIntersect >= wallY1 && yIntersect <= wallY2) || (yIntersect <= wallY1 && yIntersect >= wallY2))
+                {
+   
+                    return Math.Sqrt(Math.Pow(xIntersect - x, 2) + Math.Pow(yIntersect - y, 2));
+                }
+            }*/
 
-	        return 0;
+            // ****************** Additional Student Code: End   ************
+
+	        return double.PositiveInfinity;
         }
 
 
@@ -125,12 +169,17 @@ namespace DrRobot.JaguarControl
 
 	        // Put code here that loops through segments, calling the
 	        // function GetWallDistance.
-
-
-
-	        // ****************** Additional Student Code: End   ************
-
-	        return minDist;
+            for (int i = 0; i < numMapSegments; ++i)
+            {
+                double currentWallDist = GetWallDistance(x, y, t, i);
+                if (currentWallDist < minDist)
+                {
+                    minDist = currentWallDist;
+                }
+            }
+            // ****************** Additional Student Code: End   ************
+           // Console.WriteLine("closest wall: " + minDist);
+            return minDist;
         }
 
 
