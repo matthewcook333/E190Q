@@ -233,7 +233,10 @@ namespace DrRobot.JaguarControl
                 
 
                 // Estimate the global state of the robot -x_est, y_est, t_est (lab 4)
-                LocalizeEstWithParticleFilter();
+                if (newLaserData && (Math.Abs(diffEncoderPulseL) > 0 || Math.Abs(diffEncoderPulseR) > 0))
+                {
+                    LocalizeEstWithParticleFilter();
+                }
 
 
                 // If using the point tracker, call the function
@@ -364,7 +367,7 @@ namespace DrRobot.JaguarControl
             {
                 jaguarControl.simulatedJaguar.UpdateSensors(deltaT);
 
-                // Get most recenct encoder measurements
+                // Get most recent encoder measurements
                 currentEncoderPulseL = simulatedJaguar.GetEncoderPulse4();
                 currentEncoderPulseR = simulatedJaguar.GetEncoderPulse5();
 
@@ -435,8 +438,8 @@ namespace DrRobot.JaguarControl
             e_L = desiredRotRateL - diffEncoderPulseL / timeDiff;
             e_R = desiredRotRateR - diffEncoderPulseR / timeDiff;
 
-            e_sum_L = .9 * e_sum_L + e_L * deltaT;
-            e_sum_R = .9 * e_sum_R + e_R * deltaT;
+            e_sum_L = .9 * e_sum_L + e_L * timeDiff;
+            e_sum_R = .9 * e_sum_R + e_R * timeDiff;
 
             e_sum_L = Math.Max(-maxErr, Math.Min(e_sum_L, maxErr));
             e_sum_R = Math.Max(-maxErr, Math.Min(e_sum_R, maxErr));
@@ -777,27 +780,26 @@ namespace DrRobot.JaguarControl
         {
             // To start, just set the estimated to be the actual for simulations
             // This will not be necessary when running the PF lab
-            
-
+       
             // ****************** Additional Student Code: Start ************
 
             // Put code here to calculate x_est, y_est, t_est using a PF
-
-            x_est = x;
-            y_est = y;
-            t_est = t;
-
-            //Console.WriteLine( map.GetClosestWallDistance(x, y, t));
             double totalWeight = 0;
+           
             for (int i = 0; i < numParticles; ++i)
             {
-                double partDeltaX = distanceTravelled * Math.Cos(t + (angleTravelled / 2));
-                double partDeltaY = distanceTravelled * Math.Sin(t + (angleTravelled / 2));
-                double partDeltaT = angleTravelled;
+                double DistREst = GaussianDist(wheelDistanceR, wheelDistanceR * 5);
+                double DistLEst = GaussianDist(wheelDistanceL, wheelDistanceL * 5);
 
-                propagatedParticles[i].x = particles[i].x + GaussianDist(partDeltaX, partDeltaX/50);
-                propagatedParticles[i].y = particles[i].y + GaussianDist(partDeltaY, partDeltaY/25);
-                propagatedParticles[i].t = particles[i].t + GaussianDist(partDeltaT, partDeltaT/25);
+                double estAngleTravelled = (DistREst - DistLEst) / (2 * robotRadius);
+                double estDistanceTravelled = (DistREst + DistLEst) / 2;  
+
+                double partDeltaX = estDistanceTravelled * Math.Cos(t + (estAngleTravelled / 2));
+                double partDeltaY = estDistanceTravelled * Math.Sin(t + (estAngleTravelled / 2));
+                double partDeltaT = estAngleTravelled;
+                propagatedParticles[i].x = particles[i].x + partDeltaX; // GaussianDist(partDeltaX, partDeltaX / 2);
+                propagatedParticles[i].y = particles[i].y + partDeltaY; // GaussianDist(partDeltaY, partDeltaY / 2);
+                propagatedParticles[i].t = particles[i].t + partDeltaT; // GaussianDist(partDeltaT, partDeltaT / 2);
 
                 CalculateWeight(i);
                 totalWeight += propagatedParticles[i].w;
@@ -811,7 +813,7 @@ namespace DrRobot.JaguarControl
             {
                 double weightProp = propagatedParticles[i].w/totalWeight;
                 int copies = 1;
-                for (double j = 0.25; j <= 1.00; j += 0.25)
+                for (double j = 0.01; j <= 1.00; j += 0.01)
                 {
                     if (weightProp < j)
                     {
@@ -828,10 +830,11 @@ namespace DrRobot.JaguarControl
             for (int i = 0; i < numParticles; ++i)
             {
                 int particleIndex = random.Next(0, tempParticles.Count);
-                particles[i] = propagatedParticles[tempParticles[particleIndex]];
+                particles[i].x = propagatedParticles[tempParticles[particleIndex]].x;
+                particles[i].y = propagatedParticles[tempParticles[particleIndex]].y;
+                particles[i].t = propagatedParticles[tempParticles[particleIndex]].t;
+                particles[i].w = propagatedParticles[tempParticles[particleIndex]].w;
             }
-
-
 
             // Calculate State Estimate
             double xTotal = 0;
@@ -839,19 +842,14 @@ namespace DrRobot.JaguarControl
             double tTotal = 0;
             for (int i = 0; i < numParticles; ++i)
             {
-                xTotal += particles[numParticles].x;
-                yTotal += particles[numParticles].y;
-                tTotal += particles[numParticles].t;
+                xTotal += particles[i].x;
+                yTotal += particles[i].y;
+                tTotal += particles[i].t;
             }
             x_est = xTotal / numParticles;
             y_est = yTotal / numParticles;
             t_est = tTotal / numParticles;
-
-
-
-
             // ****************** Additional Student Code: End   ************
-
         }
 
         // taken from http://stackoverflow.com/questions/218060/random-gaussian-variables
@@ -872,22 +870,23 @@ namespace DrRobot.JaguarControl
         // range measurements and the predicted measurements associated 
         // with the particle.
         // This function should calculate the weight associated with particle p.
-
         void CalculateWeight(int p)
         {
 	        // ****************** Additional Student Code: Start ************
 
 	        // Put code here to calculated weight. Feel free to use the
 	        // function map.GetClosestWallDistance from Map.cs.
-            Particle currentParticle = particles[p];
-            double expectedRange = map.GetClosestWallDistance(currentParticle.x, currentParticle.y, currentParticle.t);
-            double sampledRange = LaserData[113];
-
-            double variance = 30; // millimeters
-            // TODO: do probability density function to get probability of this sample given distribution.
-            double weight = (1.0 / (Math.Sqrt(variance) * Math.Sqrt(2*Math.PI))) * 
-                Math.Pow(Math.E, (-Math.Pow(sampledRange - expectedRange, 2) / (2 * variance));
-            currentParticle.w = weight;
+            Particle currentParticle = propagatedParticles[p];
+            propagatedParticles[p].w = 0;
+            double variance = 0.030; // meters
+            for (int i = 0; i < LaserData.Length; i = i + laserStepSize)
+            {
+                double expectedRange = map.GetClosestWallDistance(currentParticle.x, currentParticle.y, currentParticle.t - 1.57 + laserAngles[i]);
+                double sampledRange = LaserData[i] / 1000.0;
+                double weight = (1.0 / (Math.Sqrt(variance) * Math.Sqrt(2 * Math.PI))) *
+                    Math.Pow(Math.E, (-Math.Pow(sampledRange - expectedRange, 2) / (2 * variance)));
+                propagatedParticles[p].w += weight;
+            }
         }
 
 
@@ -895,14 +894,12 @@ namespace DrRobot.JaguarControl
         // This function is used to initialize the particle states 
         // for particle filtering. It should pick a random location in the 
         // environment for each particle by calling SetRandomPos
-
         void InitializeParticles() {
 	        // Set particles in random locations and orientations within environment
 	        for (int i=0; i< numParticles; i++){
 
 		        // Either set the particles at known start position [0 0 0],  
 		        // or set particles at random locations.
-
                 if (jaguarControl.startMode == jaguarControl.UNKNOWN)
     		        SetRandomPos(i);
                 else if (jaguarControl.startMode == jaguarControl.KNOWN)
@@ -930,9 +927,6 @@ namespace DrRobot.JaguarControl
             particles[p].t = rnd.Next(-314159, 314159) / 10000.0;
             // ****************** Additional Student Code: End   ************
         }
-
-
-
 
         // For particle p, this function will select a start predefined position. 
         void SetStartPos(int p){
