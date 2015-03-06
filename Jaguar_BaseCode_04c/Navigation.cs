@@ -883,11 +883,11 @@ namespace DrRobot.JaguarControl
             double expectedRange = map.GetClosestWallDistance(currentParticle.x, currentParticle.y, currentParticle.t);
             double sampledRange = LaserData[113];
 
-            double variance = 1;
-            // TODO: do probabilitiy density function to get probability of this sample given distribution.
-            double weight = Math.Abs(sampledRange - expectedRange) / variance; //TODO: EXPERIMENTALLY DETERMINE VARIANCE
+            double variance = 30; // millimeters
+            // TODO: do probability density function to get probability of this sample given distribution.
+            double weight = (1.0 / (Math.Sqrt(variance) * Math.Sqrt(2*Math.PI))) * 
+                Math.Pow(Math.E, (-Math.Pow(sampledRange - expectedRange, 2) / (2 * variance));
             currentParticle.w = weight;
-
         }
 
 
@@ -897,8 +897,6 @@ namespace DrRobot.JaguarControl
         // environment for each particle by calling SetRandomPos
 
         void InitializeParticles() {
-
-
 	        // Set particles in random locations and orientations within environment
 	        for (int i=0; i< numParticles; i++){
 
@@ -909,8 +907,7 @@ namespace DrRobot.JaguarControl
     		        SetRandomPos(i);
                 else if (jaguarControl.startMode == jaguarControl.KNOWN)
 		            SetStartPos(i);
-	        }
-            
+	        }         
         }
 
 
