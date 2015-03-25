@@ -51,7 +51,7 @@ namespace DrRobot.JaguarControl
         private double diffEncoderPulseL, diffEncoderPulseR;
         private double maxVelocity = 0.25;
         private double Kpho = 1;
-        private double Kalpha = 2; //8
+        private double Kalpha = 4;//2; //8
         private double Kbeta = -0.5;//-0.5//-1.0;
         const double alphaTrackingAccuracy = 0.10;
         const double betaTrackingAccuracy = 0.1;
@@ -59,6 +59,7 @@ namespace DrRobot.JaguarControl
         double time = 0;
         DateTime startTime;
 
+        private string currentLog = "realData";
         private string streamPath_;
 
         public short K_P = 15;//15;
@@ -369,11 +370,21 @@ namespace DrRobot.JaguarControl
             short zeroOutput = 16383;
             short maxPosOutput = 32767;
 
+            /*
+            double K_u = 150;// 140;
+            double T_u = 2;// 8;
+            double K_p = 0.60 * K_u;// 25;
+            double K_i = 2 * K_p / T_u;// 0.1;
+            double K_d = K_p * T_u / 8;// 1;
+            */
+             
+
             double K_u = 163;// 140;
             double T_u = 29;// 8;
             double K_p = 0.6 * K_u;// 0.60 * K_u;// 25;
             double K_i =  2 * K_p / T_u;// 0.1;
-            double K_d = K_p * T_u / 8;// 1;*/
+            double K_d = K_p * T_u / 8;// 1;
+           
             
             /*
             LOPEZ VALUES
@@ -450,6 +461,8 @@ namespace DrRobot.JaguarControl
 
         #region Logging Functions
 
+        private int logNum = 1;
+
         // This function is called from a dialogue window "Record" button
         // It creates a new file and sets the logging On flag to true
         public void TurnLoggingOn()
@@ -457,10 +470,11 @@ namespace DrRobot.JaguarControl
             //int fileCnt= 0;
             String date = DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Day.ToString() + "-" + DateTime.Now.Minute.ToString();
             ToString();
-            streamPath_ = "JaguarData_AM_" + date + ".csv";
+            streamPath_ = "JaguarData_" + currentLog + "_" + logNum + ".csv";
             logFile = File.CreateText(streamPath_);
-            string header = "time, x, y, t";
-            logFile.WriteLine(header);
+            string header = "x, y, K_rho, K_alpha, K_beta";
+            // uncomment if we want a header
+            //logFile.WriteLine(header);
             logFile.Close();
             startTime = DateTime.Now;
             loggingOn = true;
@@ -473,6 +487,7 @@ namespace DrRobot.JaguarControl
             if (logFile != null)
                 logFile.Close();
             loggingOn = false;
+            ++logNum;
         }
 
         // This function is called at every iteration of the control loop
@@ -485,7 +500,9 @@ namespace DrRobot.JaguarControl
                 TimeSpan ts = DateTime.Now - startTime;
                 time = ts.TotalSeconds;
                 //double distanceFromWall = LaserData[113];
-                String newData = time.ToString() + ", " + x.ToString() + ", " + y.ToString() + ", " + t.ToString();
+                //String newData = time.ToString() + ", " + x.ToString() + ", " + y.ToString() + ", " + t.ToString();
+                String newData = x.ToString() + ", " + y.ToString() + ", " + Kpho.ToString() + ", " + Kalpha.ToString() + ", " + Kbeta.ToString();
+
 
                 logFile = File.AppendText(streamPath_);
                 logFile.WriteLine(newData);
@@ -578,7 +595,7 @@ namespace DrRobot.JaguarControl
             {
                 double thetaError = AngleDiff(desiredT, t_est);
                 double epsilon = 0.175;
-                short spinSpeed = (short)(65 + Math.Abs(thetaError) * 15 / Math.PI);
+                short spinSpeed = (short)(60 + Math.Abs(thetaError) * 15 / Math.PI);
 
                 if (thetaError > 0 && Math.Abs(thetaError) > epsilon)
                 {
@@ -620,7 +637,9 @@ namespace DrRobot.JaguarControl
 
 
        // private double[] waypoints = { 1, 1, 1, 2, 2, 0, 3, 1, -1.5, 2, 0, -2, 0, -1, 3.14 };
-        private double[] waypoints = { 3, 1, 1, 4, 2, 0, 5, 1, -1.5, 4, 0, -2, 0, -1, 3.14 };
+        // long real trajectory
+       //private double[] waypoints = { 3, 1, 1, 4, 2, 0, 5, 1, -1.5, 4, 0, -2, 0, -1, 3.14 };
+        private double[] waypoints = { 2, 1, 1, 3, 2, 0, 4, 1, -1, 5, 0, 3.14, 0, 0, 3.14};
 
         private int currentWaypoint = 0;
         // THis function is called to follow a trajectory constructed by PRMMotionPlanner()

@@ -788,11 +788,14 @@ namespace DrRobot.JaguarControl
            
             for (int i = 0; i < numParticles; ++i)
             {
-                double DistREst = GaussianDist(wheelDistanceR, wheelDistanceR * 5);
-                double DistLEst = GaussianDist(wheelDistanceL, wheelDistanceL * 5);
+                double DistREst = GaussianDist(wheelDistanceR, wheelDistanceR * 0.5);
+                double DistLEst = GaussianDist(wheelDistanceL, wheelDistanceL * 0.5);
 
                 double estAngleTravelled = (DistREst - DistLEst) / (2 * robotRadius);
-                double estDistanceTravelled = (DistREst + DistLEst) / 2;  
+                double estDistanceTravelled = (DistREst + DistLEst) / 2;
+               // double estAngleTravelled = (wheelDistanceR - wheelDistanceL) / (2 * robotRadius);
+               // estAngleTravelled += GaussianDist(0, Math.PI/180*5);
+
 
                 double partDeltaX = estDistanceTravelled * Math.Cos(t + (estAngleTravelled / 2));
                 double partDeltaY = estDistanceTravelled * Math.Sin(t + (estAngleTravelled / 2));

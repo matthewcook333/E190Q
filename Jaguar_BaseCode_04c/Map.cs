@@ -29,8 +29,8 @@ namespace DrRobot.JaguarControl
 	        // ****************** Additional Student Code: Start ************
 	
 	        // Change hard code here to change map:
-
-	        numMapSegments = 8;
+            
+            numMapSegments = 8;
             mapSegmentCorners = new double[numMapSegments, 2, 2];
             slopes = new double[numMapSegments];
             intercepts = new double[numMapSegments];
