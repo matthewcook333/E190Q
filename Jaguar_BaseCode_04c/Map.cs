@@ -122,9 +122,17 @@ namespace DrRobot.JaguarControl
             double xIntersect = ((1 * pointIntercept) - (1 * intercepts[segment])) / delta;
             double yIntersect = ((-pointSlope * intercepts[segment]) - (-slopes[segment] * pointIntercept)) / delta;
 
-
-
             double epsilon = 0.05;
+            // checking if intersection is actually in laser sight rather than behind
+            if (!((t > -epsilon && yIntersect >= y) || (t < epsilon && yIntersect <= y))) 
+            {
+                if (!((Math.Abs(t) < (Math.PI / 2 + epsilon) && xIntersect > x))
+                    || (Math.Abs(t) > (Math.PI / 2 - epsilon) && xIntersect < x))
+                {
+                    return double.PositiveInfinity;
+                }
+            }
+            
             // checking if intersection is within wall segment
             if ((xIntersect >= wallX1 - epsilon  && xIntersect <= wallX2 + epsilon) 
                 || (xIntersect <= wallX1 + epsilon && xIntersect >= wallX2 - epsilon))
@@ -133,23 +141,11 @@ namespace DrRobot.JaguarControl
                     || (yIntersect <= wallY1 + epsilon && yIntersect >= wallY2 - epsilon))
                 {
                     double dist = Math.Sqrt(Math.Pow(xIntersect - x, 2) + Math.Pow(yIntersect - y, 2));
-                    //if (segment == 2)
-                    //{
-                    //    Console.WriteLine("getting herrr with: " + xIntersect + ", " + yIntersect);
-                    //    Console.WriteLine("and dist: " + dist);
-                    //}
+
                     return dist;
                 }
             }
-            /*
-            if ((xIntersect >= wallX1 && xIntersect <= wallX2) || (xIntersect <= wallX1 && xIntersect >= wallX2))
-            {
-                if ((yIntersect >= wallY1 && yIntersect <= wallY2) || (yIntersect <= wallY1 && yIntersect >= wallY2))
-                {
-   
-                    return Math.Sqrt(Math.Pow(xIntersect - x, 2) + Math.Pow(yIntersect - y, 2));
-                }
-            }*/
+    
 
             // ****************** Additional Student Code: End   ************
 

@@ -94,8 +94,6 @@ namespace DrRobot.JaguarControl
         private int laserCounter;
         private int laserStepSize = 3;
 
-        Random rnd = new Random();
-
         public class Particle
         {
             public double x, y, t, w;
@@ -793,16 +791,14 @@ namespace DrRobot.JaguarControl
 
                 double estAngleTravelled = (DistREst - DistLEst) / (2 * robotRadius);
                 double estDistanceTravelled = (DistREst + DistLEst) / 2;
-               // double estAngleTravelled = (wheelDistanceR - wheelDistanceL) / (2 * robotRadius);
-               // estAngleTravelled += GaussianDist(0, Math.PI/180*5);
 
 
-                double partDeltaX = estDistanceTravelled * Math.Cos(t + (estAngleTravelled / 2));
-                double partDeltaY = estDistanceTravelled * Math.Sin(t + (estAngleTravelled / 2));
+                double partDeltaX = estDistanceTravelled * Math.Cos(particles[i].t + (estAngleTravelled / 2));
+                double partDeltaY = estDistanceTravelled * Math.Sin(particles[i].t + (estAngleTravelled / 2));
                 double partDeltaT = estAngleTravelled;
-                propagatedParticles[i].x = particles[i].x + partDeltaX; // GaussianDist(partDeltaX, partDeltaX / 2);
-                propagatedParticles[i].y = particles[i].y + partDeltaY; // GaussianDist(partDeltaY, partDeltaY / 2);
-                propagatedParticles[i].t = particles[i].t + partDeltaT; // GaussianDist(partDeltaT, partDeltaT / 2);
+                propagatedParticles[i].x = particles[i].x + partDeltaX; 
+                propagatedParticles[i].y = particles[i].y + partDeltaY; 
+                propagatedParticles[i].t = particles[i].t + partDeltaT; 
 
                 CalculateWeight(i);
                 totalWeight += propagatedParticles[i].w;
@@ -816,7 +812,7 @@ namespace DrRobot.JaguarControl
             {
                 double weightProp = propagatedParticles[i].w/totalWeight;
                 int copies = 1;
-                for (double j = 0.01; j <= 1.00; j += 0.01)
+                for (double j = 0.001; j <= 1.000; j += 0.001)
                 {
                     if (weightProp < j)
                     {
@@ -858,8 +854,8 @@ namespace DrRobot.JaguarControl
         // taken from http://stackoverflow.com/questions/218060/random-gaussian-variables
         public double GaussianDist(double mean, double stdDev)
         {
-            double u1 = rnd.NextDouble(); //these are uniform(0,1) random doubles
-            double u2 = rnd.NextDouble();
+            double u1 = random.NextDouble(); //these are uniform(0,1) random doubles
+            double u2 = random.NextDouble();
             double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
                          Math.Sin(2.0 * Math.PI * u2); //random normal(0,1)
             double randNormal =
@@ -925,9 +921,9 @@ namespace DrRobot.JaguarControl
             // particles[p]. Feel free to use the random.NextDouble() function. 
 	        // It might be helpful to use boundaries defined in the
 	        // Map.cs file (e.g. map.minX)
-            particles[p].x = rnd.Next((int)map.minX, (int)map.maxX + 1) + rnd.NextDouble();
-            particles[p].y = rnd.Next((int)map.minY, (int)map.maxY + 1) + rnd.NextDouble();
-            particles[p].t = rnd.Next(-314159, 314159) / 10000.0;
+            particles[p].x = random.Next((int)map.minX, (int)map.maxX + 1) + random.NextDouble();
+            particles[p].y = random.Next((int)map.minY, (int)map.maxY + 1) + random.NextDouble();
+            particles[p].t = random.Next(-314159, 314159) / 10000.0;
             // ****************** Additional Student Code: End   ************
         }
 
