@@ -122,17 +122,25 @@ namespace DrRobot.JaguarControl
             double xIntersect = ((1 * pointIntercept) - (1 * intercepts[segment])) / delta;
             double yIntersect = ((-pointSlope * intercepts[segment]) - (-slopes[segment] * pointIntercept)) / delta;
 
-            double epsilon = 0.05;
+            double epsilon = 0.01;
+
+            // quadrant laser range is pointing in
+            Boolean yUp = (t > -epsilon);
+            Boolean yDown = (t < epsilon);
+            Boolean xRight = ((Math.Abs(t) < (Math.PI / 2 + epsilon)));
+            Boolean xLeft = ((Math.Abs(t) > (Math.PI / 2 - epsilon)));
+            // quadrant of the intersection
+            Boolean Quad1 = (yIntersect >= y && xIntersect >= x);
+            Boolean Quad2 =  (yIntersect >= y && xIntersect < x);
+            Boolean Quad3 =  (yIntersect <= y && xIntersect < x);
+            Boolean Quad4 =  (yIntersect < y && xIntersect >= x);
+
             // checking if intersection is actually in laser sight rather than behind
-            if (!((t > -epsilon && yIntersect >= y) || (t < epsilon && yIntersect <= y))) 
-            {
-                if (!((Math.Abs(t) < (Math.PI / 2 + epsilon) && xIntersect > x))
-                    || (Math.Abs(t) > (Math.PI / 2 - epsilon) && xIntersect < x))
-                {
-                    return double.PositiveInfinity;
-                }
+            if (!((Quad1 && yUp && xRight) || (Quad2 && yUp && xLeft) || (Quad3 && yDown && xLeft) || (Quad4 && yDown && xRight))) {
+                return double.PositiveInfinity;
             }
-            
+
+
             // checking if intersection is within wall segment
             if ((xIntersect >= wallX1 - epsilon  && xIntersect <= wallX2 + epsilon) 
                 || (xIntersect <= wallX1 + epsilon && xIntersect >= wallX2 - epsilon))

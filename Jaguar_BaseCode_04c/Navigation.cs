@@ -92,7 +92,7 @@ namespace DrRobot.JaguarControl
         public double laserMinRange = 0.2;
         public double[] laserAngles;
         private int laserCounter;
-        private int laserStepSize = 3;
+        public int laserStepSize = 3;
 
         public class Particle
         {
@@ -792,7 +792,6 @@ namespace DrRobot.JaguarControl
                 double estAngleTravelled = (DistREst - DistLEst) / (2 * robotRadius);
                 double estDistanceTravelled = (DistREst + DistLEst) / 2;
 
-
                 double partDeltaX = estDistanceTravelled * Math.Cos(particles[i].t + (estAngleTravelled / 2));
                 double partDeltaY = estDistanceTravelled * Math.Sin(particles[i].t + (estAngleTravelled / 2));
                 double partDeltaT = estAngleTravelled;
@@ -812,7 +811,8 @@ namespace DrRobot.JaguarControl
             {
                 double weightProp = propagatedParticles[i].w/totalWeight;
                 int copies = 1;
-                for (double j = 0.001; j <= 1.000; j += 0.001)
+                double stepSize = 1.0 / (numParticles * 5.0);
+                for (double j = stepSize; j <= 1.000; j += stepSize)
                 {
                     if (weightProp < j)
                     {
@@ -825,7 +825,12 @@ namespace DrRobot.JaguarControl
                     tempParticles.Add(i);
                 }
             }
+
+            double xTotal = 0;
+            double yTotal = 0;
+            double tTotal = 0;
             // randomly choose the particles for the resampling
+            // and then calculate State Estimate
             for (int i = 0; i < numParticles; ++i)
             {
                 int particleIndex = random.Next(0, tempParticles.Count);
@@ -833,14 +838,6 @@ namespace DrRobot.JaguarControl
                 particles[i].y = propagatedParticles[tempParticles[particleIndex]].y;
                 particles[i].t = propagatedParticles[tempParticles[particleIndex]].t;
                 particles[i].w = propagatedParticles[tempParticles[particleIndex]].w;
-            }
-
-            // Calculate State Estimate
-            double xTotal = 0;
-            double yTotal = 0;
-            double tTotal = 0;
-            for (int i = 0; i < numParticles; ++i)
-            {
                 xTotal += particles[i].x;
                 yTotal += particles[i].y;
                 tTotal += particles[i].t;
@@ -875,12 +872,14 @@ namespace DrRobot.JaguarControl
 
 	        // Put code here to calculated weight. Feel free to use the
 	        // function map.GetClosestWallDistance from Map.cs.
-            Particle currentParticle = propagatedParticles[p];
             propagatedParticles[p].w = 0;
             double variance = 0.030; // meters
             for (int i = 0; i < LaserData.Length; i = i + laserStepSize)
             {
-                double expectedRange = map.GetClosestWallDistance(currentParticle.x, currentParticle.y, currentParticle.t - 1.57 + laserAngles[i]);
+                double expectedRange = map.GetClosestWallDistance(
+                    propagatedParticles[p].x, 
+                    propagatedParticles[p].y, 
+                    propagatedParticles[p].t - 1.57 + laserAngles[i]);
                 double sampledRange = LaserData[i] / 1000.0;
                 double weight = (1.0 / (Math.Sqrt(variance) * Math.Sqrt(2 * Math.PI))) *
                     Math.Pow(Math.E, (-Math.Pow(sampledRange - expectedRange, 2) / (2 * variance)));
