@@ -15,6 +15,7 @@ namespace DrRobot.JaguarControl
         public double x, y, t;
         public double x_est, y_est, t_est;
         public double desiredX, desiredY, desiredT;
+        public double x_prev, y_prev, t_prev;
 
         public Boolean withinEpsilon = false;
         public long lastUpdate = 0;
@@ -87,7 +88,7 @@ namespace DrRobot.JaguarControl
         public int numParticles = 1000;
         public double K_wheelRandomness = 0.15;//0.25
         public Random random = new Random();
-        public bool newLaserData = false;
+        private bool newLaserData = false;
         public double laserMaxRange = 4.0;
         public double laserMinRange = 0.2;
         public double[] laserAngles;
@@ -146,6 +147,10 @@ namespace DrRobot.JaguarControl
             x_est = 0;//initialX;
             y_est = 0;//initialY;
             t_est = 0;//initialT;
+
+            x_prev = x;
+            y_prev = y;
+            t_prev = t;
 
             // Set desired state
             desiredX = 0;// initialX;
@@ -231,10 +236,10 @@ namespace DrRobot.JaguarControl
                 
 
                 // Estimate the global state of the robot -x_est, y_est, t_est (lab 4)
-                if (newLaserData && (Math.Abs(diffEncoderPulseL) > 0 || Math.Abs(diffEncoderPulseR) > 0))
-                {
+                //if (newLaserData && (Math.Abs(diffEncoderPulseL) > 0 || Math.Abs(diffEncoderPulseR) > 0))
+                //{
                     LocalizeEstWithParticleFilter();
-                }
+                //}
 
 
                 // If using the point tracker, call the function
@@ -378,7 +383,6 @@ namespace DrRobot.JaguarControl
                         LaserData[i] = (long)(1000 * map.GetClosestWallDistance(x, y, t -1.57 + laserAngles[i]));
                     }
                     laserCounter = 0;
-                    newLaserData = true;
                 }
             }
             else
@@ -670,7 +674,6 @@ namespace DrRobot.JaguarControl
             double deltaX = desiredX - x_est;
             double deltaY = desiredY - y_est;
             double distToDest = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
-            //Console.WriteLine("DistToDest: " + distToDest);
             if (distToDest < 0.66 && currentWaypoint < waypoints.Length - 3)
             {
                 currentWaypoint += 3;
@@ -781,13 +784,21 @@ namespace DrRobot.JaguarControl
        
             // ****************** Additional Student Code: Start ************
 
+            if (Math.Abs(x - x_prev) > 0.03 || Math.Abs(y - y_prev) > 0.03 || Math.Abs(t - t_prev) > 0.05)
+            {
+                newLaserData = true;
+                x_prev = x;
+                y_prev = y;
+                t_prev = t;
+            }
+
             // Put code here to calculate x_est, y_est, t_est using a PF
             double totalWeight = 0;
            
             for (int i = 0; i < numParticles; ++i)
             {
-                double DistREst = GaussianDist(wheelDistanceR, wheelDistanceR * 0.5);
-                double DistLEst = GaussianDist(wheelDistanceL, wheelDistanceL * 0.5);
+                double DistREst = GaussianDist(wheelDistanceR, wheelDistanceR * 0.4);
+                double DistLEst = GaussianDist(wheelDistanceL, wheelDistanceL * 0.4);
 
                 double estAngleTravelled = (DistREst - DistLEst) / (2 * robotRadius);
                 double estDistanceTravelled = (DistREst + DistLEst) / 2;
@@ -797,54 +808,70 @@ namespace DrRobot.JaguarControl
                 double partDeltaT = estAngleTravelled;
                 propagatedParticles[i].x = particles[i].x + partDeltaX; 
                 propagatedParticles[i].y = particles[i].y + partDeltaY; 
-                propagatedParticles[i].t = particles[i].t + partDeltaT; 
+                propagatedParticles[i].t = particles[i].t + partDeltaT;
 
-                CalculateWeight(i);
-                totalWeight += propagatedParticles[i].w;
+                if (newLaserData)
+                {
+                    CalculateWeight(i);
+                    totalWeight += propagatedParticles[i].w;
+                }     
             }
 
 
             // resample particles
             // first we make copies based on the ratio of current particle weight to total weight
-            List<int> tempParticles = new List<int>();
-            for (int i = 0; i < numParticles; ++i)
-            {
-                double weightProp = propagatedParticles[i].w/totalWeight;
-                int copies = 1;
-                double stepSize = 1.0 / (numParticles * 5.0);
-                for (double j = stepSize; j <= 1.000; j += stepSize)
-                {
-                    if (weightProp < j)
-                    {
-                        break;
-                    }
-                    copies += 1;
-                }
-                for (; copies > 0; --copies)
-                {
-                    tempParticles.Add(i);
-                }
-            }
-
             double xTotal = 0;
             double yTotal = 0;
             double tTotal = 0;
-            // randomly choose the particles for the resampling
-            // and then calculate State Estimate
-            for (int i = 0; i < numParticles; ++i)
+            if (newLaserData)
             {
-                int particleIndex = random.Next(0, tempParticles.Count);
-                particles[i].x = propagatedParticles[tempParticles[particleIndex]].x;
-                particles[i].y = propagatedParticles[tempParticles[particleIndex]].y;
-                particles[i].t = propagatedParticles[tempParticles[particleIndex]].t;
-                particles[i].w = propagatedParticles[tempParticles[particleIndex]].w;
-                xTotal += particles[i].x;
-                yTotal += particles[i].y;
-                tTotal += particles[i].t;
+                List<int> tempParticles = new List<int>();
+                double stepSize = 1.0 / (numParticles * 5.0);
+                for (int i = 0; i < numParticles; ++i)
+                {
+                    double weightProp = propagatedParticles[i].w / totalWeight;
+                    for (double j = 0; j <= 1.000; j += stepSize)
+                    {
+                        if (weightProp < j)
+                        {
+                            break;
+                        }
+                        tempParticles.Add(i);
+                    }
+                }
+
+                // randomly choose the particles for the resampling
+                // and then calculate State Estimate
+                for (int i = 0; i < numParticles; ++i)
+                {
+                    int particleIndex = random.Next(0, tempParticles.Count);
+                    particles[i].x = propagatedParticles[tempParticles[particleIndex]].x;
+                    particles[i].y = propagatedParticles[tempParticles[particleIndex]].y;
+                    particles[i].t = propagatedParticles[tempParticles[particleIndex]].t;
+                    particles[i].w = propagatedParticles[tempParticles[particleIndex]].w;
+                    xTotal += particles[i].x;
+                    yTotal += particles[i].y;
+                    tTotal += particles[i].t + Math.PI;
+                }
+                newLaserData = false;
+            }
+            else
+            {
+                for (int i = 0; i < numParticles; ++i)
+                {
+                    particles[i].x = propagatedParticles[i].x;
+                    particles[i].y = propagatedParticles[i].y;
+                    particles[i].t = propagatedParticles[i].t;
+                    particles[i].w = propagatedParticles[i].w;
+                    xTotal += particles[i].x;
+                    yTotal += particles[i].y;
+                    tTotal += particles[i].t + Math.PI;
+                }
             }
             x_est = xTotal / numParticles;
             y_est = yTotal / numParticles;
             t_est = tTotal / numParticles;
+            t_est -= Math.PI;
             // ****************** Additional Student Code: End   ************
         }
 

@@ -29,18 +29,18 @@ namespace DrRobot.JaguarControl
 	        // ****************** Additional Student Code: Start ************
 	
 	        // Change hard code here to change map:
-            
-            numMapSegments = 8;
+
+            numMapSegments =  8;
             mapSegmentCorners = new double[numMapSegments, 2, 2];
             slopes = new double[numMapSegments];
             intercepts = new double[numMapSegments];
             segmentSizes = new double[numMapSegments];
-
+            
             mapSegmentCorners[0, 0, 0] = 3.38 + 5.79 + 3.55 / 2;
 	        mapSegmentCorners[0,0,1] = 2.794;
             mapSegmentCorners[0, 1, 0] = -3.38 - 5.79 - 3.55 / 2;
             mapSegmentCorners[0, 1, 1] = 2.794;
-
+            
 	        mapSegmentCorners[1,0,0] = -3.55/2;
 	        mapSegmentCorners[1,0,1] = 0.0;
 	        mapSegmentCorners[1,1,0] = -3.55/2;
@@ -74,7 +74,7 @@ namespace DrRobot.JaguarControl
             mapSegmentCorners[7, 0, 0] = 5.03 / 2;
             mapSegmentCorners[7, 0, 1] = -2.74 - 2.31;
             mapSegmentCorners[7, 1, 0] = -5.03/2;
-            mapSegmentCorners[7, 1, 1] = -2.74 - 2.31;
+            mapSegmentCorners[7, 1, 1] = -2.74 - 2.31;    
             // ****************** Additional Student Code: End   ************
 
 
@@ -103,6 +103,15 @@ namespace DrRobot.JaguarControl
         // the range measurement to a segment given the ROBOT POSITION (x, y) and 
         // SENSOR ORIENTATION (t)
         double GetWallDistance(double x, double y, double t, int segment){
+            double testT = t;
+            if (testT > Math.PI)
+            {
+                testT -= 2 * Math.PI;
+            }
+            if (testT < -Math.PI)
+            {
+                testT += 2 * Math.PI;
+            }
 
             double wallX1 = mapSegmentCorners[segment, 0, 0];
             double wallY1 = mapSegmentCorners[segment, 0, 1];
@@ -125,10 +134,10 @@ namespace DrRobot.JaguarControl
             double epsilon = 0.01;
 
             // quadrant laser range is pointing in
-            Boolean yUp = (t > -epsilon);
-            Boolean yDown = (t < epsilon);
-            Boolean xRight = ((Math.Abs(t) < (Math.PI / 2 + epsilon)));
-            Boolean xLeft = ((Math.Abs(t) > (Math.PI / 2 - epsilon)));
+            Boolean yUp = (testT > -epsilon);
+            Boolean yDown = (testT < epsilon);
+            Boolean xRight = ((Math.Abs(testT) < (Math.PI / 2 + epsilon)));
+            Boolean xLeft = ((Math.Abs(testT) > (Math.PI / 2 - epsilon)));
             // quadrant of the intersection
             Boolean Quad1 = (yIntersect >= y && xIntersect >= x);
             Boolean Quad2 =  (yIntersect >= y && xIntersect < x);
@@ -137,26 +146,22 @@ namespace DrRobot.JaguarControl
 
             // checking if intersection is actually in laser sight rather than behind
             if (!((Quad1 && yUp && xRight) || (Quad2 && yUp && xLeft) || (Quad3 && yDown && xLeft) || (Quad4 && yDown && xRight))) {
+                //Console.WriteLine("quadrant intersection error");
                 return double.PositiveInfinity;
             }
 
-
+            Boolean intersectingX = (xIntersect >= wallX1 - epsilon  && xIntersect <= wallX2 + epsilon) 
+                || (xIntersect <= wallX1 + epsilon && xIntersect >= wallX2 - epsilon);
+            Boolean intersectingY = (yIntersect >= wallY1 - epsilon && yIntersect <= wallY2 + epsilon) 
+                    || (yIntersect <= wallY1 + epsilon && yIntersect >= wallY2 - epsilon);
             // checking if intersection is within wall segment
-            if ((xIntersect >= wallX1 - epsilon  && xIntersect <= wallX2 + epsilon) 
-                || (xIntersect <= wallX1 + epsilon && xIntersect >= wallX2 - epsilon))
+            if (intersectingX && intersectingY)
             {
-                if ((yIntersect >= wallY1 - epsilon && yIntersect <= wallY2 + epsilon) 
-                    || (yIntersect <= wallY1 + epsilon && yIntersect >= wallY2 - epsilon))
-                {
-                    double dist = Math.Sqrt(Math.Pow(xIntersect - x, 2) + Math.Pow(yIntersect - y, 2));
-
-                    return dist;
-                }
+                double dist = Math.Sqrt(Math.Pow(xIntersect - x, 2) + Math.Pow(yIntersect - y, 2));
+                return dist;
             }
-    
-
             // ****************** Additional Student Code: End   ************
-
+            //Console.WriteLine("no intersection");
 	        return double.PositiveInfinity;
         }
 
