@@ -528,7 +528,7 @@ namespace DrRobot.JaguarControl
 
             Array.Copy(disData, disDataLast, DISDATALEN);
             Array.Copy(disData, navigation.LaserData, DISDATALEN); // -wf
-            //navigation.newLaserData = true;
+            navigation.newLaserData = true;
             //Copy laser scanner data into buffer visible to robot logic
 
         }

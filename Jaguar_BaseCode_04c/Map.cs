@@ -30,51 +30,94 @@ namespace DrRobot.JaguarControl
 	
 	        // Change hard code here to change map:
 
-            numMapSegments =  8;
+            numMapSegments = 16;
             mapSegmentCorners = new double[numMapSegments, 2, 2];
             slopes = new double[numMapSegments];
             intercepts = new double[numMapSegments];
             segmentSizes = new double[numMapSegments];
             
+            //top wall
             mapSegmentCorners[0, 0, 0] = 3.38 + 5.79 + 3.55 / 2;
 	        mapSegmentCorners[0,0,1] = 2.794;
             mapSegmentCorners[0, 1, 0] = -3.38 - 5.79 - 3.55 / 2;
             mapSegmentCorners[0, 1, 1] = 2.794;
-            
+            // left wall
 	        mapSegmentCorners[1,0,0] = -3.55/2;
 	        mapSegmentCorners[1,0,1] = 0.0;
 	        mapSegmentCorners[1,1,0] = -3.55/2;
 	        mapSegmentCorners[1,1,1] = -2.74;
-
+            //right wall
 	        mapSegmentCorners[2,0,0] = 3.55/2;
 	        mapSegmentCorners[2,0,1] = 0.0;
 	        mapSegmentCorners[2,1,0] = 3.55/2;
 	        mapSegmentCorners[2,1,1] = -2.74;
-
+            // upper right horizontal wall
             mapSegmentCorners[3, 0, 0] = 3.55/2;
             mapSegmentCorners[3, 0, 1] = 0.0;
             mapSegmentCorners[3, 1, 0] = 3.55 / 2 + 5.79;
             mapSegmentCorners[3, 1, 1] = 0.0;
-
+            // upper left horizontal wall
             mapSegmentCorners[4, 0, 0] = -3.55/2;
             mapSegmentCorners[4, 0, 1] = 0.0;
             mapSegmentCorners[4, 1, 0] = -3.55/2 - 5.79;
             mapSegmentCorners[4, 1, 1] = 0.0;
-
+            // lower left
             mapSegmentCorners[5, 0, 0] = -3.55/2;
             mapSegmentCorners[5, 0, 1] = -2.74;
             mapSegmentCorners[5, 1, 0] = -3.55/2-3.05;
             mapSegmentCorners[5, 1, 1] = -2.74;
-
+            // lower right
             mapSegmentCorners[6, 0, 0] = 3.55 / 2;
             mapSegmentCorners[6, 0, 1] = -2.74;
             mapSegmentCorners[6, 1, 0] = 3.55 / 2 + 3.05;
             mapSegmentCorners[6, 1, 1] = -2.74;
-
+            // bottom wall
             mapSegmentCorners[7, 0, 0] = 5.03 / 2;
             mapSegmentCorners[7, 0, 1] = -2.74 - 2.31;
             mapSegmentCorners[7, 1, 0] = -5.03/2;
-            mapSegmentCorners[7, 1, 1] = -2.74 - 2.31;    
+            mapSegmentCorners[7, 1, 1] = -2.74 - 2.31; 
+            // farthest left wall 
+            mapSegmentCorners[12, 0, 0] = -3.38 - 5.79 - 3.55 / 2;
+            mapSegmentCorners[12, 0, 1] = 2.794;
+            mapSegmentCorners[12, 1, 0] = -3.38 - 5.79 - 3.55 / 2;
+            mapSegmentCorners[12, 1, 1] = -8.0;
+            // farthest right wall
+            mapSegmentCorners[13, 0, 0] = 3.38 + 5.79 + 3.55 / 2;
+            mapSegmentCorners[13, 0, 1] = 2.794;
+            mapSegmentCorners[13, 1, 0] = 3.38 + 5.79 + 3.55 / 2;
+            mapSegmentCorners[13, 1, 1] = -8.0;
+            // far closer left wall
+            mapSegmentCorners[14, 0, 0] = -3.55 / 2 - 5.79;
+            mapSegmentCorners[14, 0, 1] = 0.0;
+            mapSegmentCorners[14, 1, 0] = -3.55 / 2 - 5.79;
+            mapSegmentCorners[14, 1, 1] = -8.0;
+            // far closer right wall
+            mapSegmentCorners[15, 0, 0] = 3.55 / 2 + 5.79; ;
+            mapSegmentCorners[15, 0, 1] = 0.0;
+            mapSegmentCorners[15, 1, 0] = 3.55 / 2 + 5.79;
+            mapSegmentCorners[15, 1, 1] = -8.0;
+            // even closer left vertical
+            mapSegmentCorners[8, 0, 0] = -3.55 / 2 - 3.05;
+            mapSegmentCorners[8, 0, 1] = -2.74;
+            mapSegmentCorners[8, 1, 0] = -3.55 / 2 - 3.05;
+            mapSegmentCorners[8, 1, 1] = -8.0;
+            // even closer right vertical
+            mapSegmentCorners[9, 0, 0] = 3.55 / 2 + 3.05;
+            mapSegmentCorners[9, 0, 1] = -2.74;
+            mapSegmentCorners[9, 1, 0] = 3.55 / 2 + 3.05;
+            mapSegmentCorners[9, 1, 1] = -8.0;
+            // bottom  left wall
+            mapSegmentCorners[10, 0, 0] = -5.03 / 2;
+            mapSegmentCorners[10, 0, 1] = -2.74 - 2.31;
+            mapSegmentCorners[10, 1, 0] = -5.03 / 2;
+            mapSegmentCorners[10, 1, 1] = -2.74 - 2.31 - 3.0; //added 3.0
+            // bottom right wall
+            mapSegmentCorners[11, 0, 0] = 5.03 / 2;
+            mapSegmentCorners[11, 0, 1] = -2.74 - 2.31;
+            mapSegmentCorners[11, 1, 0] = 5.03 / 2;
+            mapSegmentCorners[11, 1, 1] = -2.74 - 2.31 - 3.0; //added 3.0 
+            
+            
             // ****************** Additional Student Code: End   ************
 
 

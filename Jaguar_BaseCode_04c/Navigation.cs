@@ -85,15 +85,21 @@ namespace DrRobot.JaguarControl
         public Map map;
         public Particle[] particles;
         public Particle[] propagatedParticles;
-        public int numParticles = 1000;
+        public int numParticles = 3000;
         public double K_wheelRandomness = 0.15;//0.25
         public Random random = new Random();
-        private bool newLaserData = false;
+        public bool newLaserData = false;
         public double laserMaxRange = 4.0;
         public double laserMinRange = 0.2;
         public double[] laserAngles;
         private int laserCounter;
         public int laserStepSize = 3;
+        public Boolean newMovement = false;
+
+        public double PFLastEncoderL = 0;
+        public double PFLastEncoderR = 0;
+        public double PFEncoderDiffL = 0;
+        public double PFEncoderDiffR = 0;
 
         public class Particle
         {
@@ -255,10 +261,10 @@ namespace DrRobot.JaguarControl
                     }
 
                     // Drive the robot to a desired Point (lab 3)
-                    FlyToSetPoint();
+                    //FlyToSetPoint();
 
                     // Follow the trajectory instead of a desired point (lab 3)
-                    //TrackTrajectory();
+                    TrackTrajectory();
 
                     // Actuate motors based actuateMotorL and actuateMotorR
                     if (jaguarControl.Simulating())
@@ -328,6 +334,8 @@ namespace DrRobot.JaguarControl
                         currentEncoderPulseR = jaguarControl.realJaguar.GetEncoderPulse5();
                         lastEncoderPulseL = currentEncoderPulseL;
                         lastEncoderPulseR = currentEncoderPulseR;
+                        PFLastEncoderL = currentEncoderPulseL;
+                        PFLastEncoderR = currentEncoderPulseR;
                         gotFirstEncoder = true;
 
                         currentAccel_x = jaguarControl.getAccel_x();
@@ -383,6 +391,7 @@ namespace DrRobot.JaguarControl
                         LaserData[i] = (long)(1000 * map.GetClosestWallDistance(x, y, t -1.57 + laserAngles[i]));
                     }
                     laserCounter = 0;
+                    newLaserData = true;
                 }
             }
             else
@@ -430,7 +439,7 @@ namespace DrRobot.JaguarControl
 
             double K_u = 163;// 140;
             double T_u = 29;// 8;
-            double K_p = 0.6 * K_u;// 25;
+            double K_p = 0.6 /*0.725*/ * K_u;// 25;
             double K_i = 2 * K_p / T_u;// 0.1;
             double K_d = K_p * T_u / 8;// 1;
 
@@ -500,9 +509,10 @@ namespace DrRobot.JaguarControl
             //int fileCnt= 0;
             String date = DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Day.ToString() + "-" + DateTime.Now.Minute.ToString();
             ToString();
-            streamPath_ = "JaguarData_" + currentLog + "_" + logNum + ".csv";
+            streamPath_ = "JaguarData_" + date + ".csv";
             logFile = File.CreateText(streamPath_);
-            string header = "x, y, K_rho, K_alpha, K_beta";
+            string header = "iteration, x, y, t";
+            Console.WriteLine("Writing to " + streamPath_);
             // uncomment if we want a header
             //logFile.WriteLine(header);
             logFile.Close();
@@ -523,6 +533,7 @@ namespace DrRobot.JaguarControl
         // This function is called at every iteration of the control loop
         // IF the loggingOn flag is set to true, the function checks how long the 
         // logging has been running and records this time
+        int iteration = 0;
         private void LogData()
         {
             if (loggingOn)
@@ -530,9 +541,17 @@ namespace DrRobot.JaguarControl
                 TimeSpan ts = DateTime.Now - startTime;
                 time = ts.TotalSeconds;
                 //double distanceFromWall = LaserData[113];
-                //String newData = time.ToString() + ", " + x.ToString() + ", " + y.ToString() + ", " + t.ToString();
-                String newData = x.ToString() + ", " + y.ToString() + ", " + Kpho.ToString() + ", " + Kalpha.ToString() + ", " + Kbeta.ToString();
-
+                //String newData = time.ToString() + ", " + x.ToString() + ", " + y.ToString() + ", " + t.ToString();                
+                String newData = "";
+                //if (iteration % 5 == 0) {
+                    
+                    //for (int i = 0; i < numParticles; ++i)
+                    //{
+                    //    newData += iteration.ToString() + ", " + particles[i].x.ToString() + ", " + particles[i].y.ToString() + ", " + particles[i].t.ToString() + "\n";
+                    //}
+                //}
+                //iteration++;
+                newData += x.ToString() + ", " + y.ToString() + ", " + x_est.ToString() + ", " + y_est.ToString();
 
                 logFile = File.AppendText(streamPath_);
                 logFile.WriteLine(newData);
@@ -662,7 +681,8 @@ namespace DrRobot.JaguarControl
         }
 
 
-        private double[] waypoints = { 2, 1, 1, 3, 2, 0, 4, 1, -1, 5, 0, 3.14, 0, 0, 3.14 };
+        //private double[] waypoints = { 2, 1, 1, 3, 2, 0, 4, 1, -1, 5, 0, 3.14, 0, 0, 3.14 };
+        private double[] waypoints = {0.5, -0.5, -1.4, 1, -4, -1, 4, -4.5, 0 };
         private int currentWaypoint = 0;
         // THis function is called to follow a trajectory constructed by PRMMotionPlanner()
         private void TrackTrajectory()
@@ -673,8 +693,9 @@ namespace DrRobot.JaguarControl
             desiredT = waypoints[currentWaypoint + 2];
             double deltaX = desiredX - x_est;
             double deltaY = desiredY - y_est;
+            double deltaT = desiredT - t_est;
             double distToDest = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
-            if (distToDest < 0.66 && currentWaypoint < waypoints.Length - 3)
+            if (Math.Abs(deltaT) < 0.3 && distToDest < 0.2 && currentWaypoint < waypoints.Length - 3)
             {
                 currentWaypoint += 3;
                 desiredX = waypoints[currentWaypoint];
@@ -777,16 +798,17 @@ namespace DrRobot.JaguarControl
         }
 
 
+
         public void LocalizeEstWithParticleFilter()
         {
             // To start, just set the estimated to be the actual for simulations
             // This will not be necessary when running the PF lab
        
             // ****************** Additional Student Code: Start ************
-
-            if (Math.Abs(x - x_prev) > 0.03 || Math.Abs(y - y_prev) > 0.03 || Math.Abs(t - t_prev) > 0.05)
+            
+            if (Math.Abs(x - x_prev) > 0.00 || Math.Abs(y - y_prev) > 0.00 || Math.Abs(t - t_prev) > 0.00)
             {
-                newLaserData = true;
+                newMovement = true;
                 x_prev = x;
                 y_prev = y;
                 t_prev = t;
@@ -794,23 +816,44 @@ namespace DrRobot.JaguarControl
 
             // Put code here to calculate x_est, y_est, t_est using a PF
             double totalWeight = 0;
+
            
             for (int i = 0; i < numParticles; ++i)
             {
-                double DistREst = GaussianDist(wheelDistanceR, wheelDistanceR * 0.4);
-                double DistLEst = GaussianDist(wheelDistanceL, wheelDistanceL * 0.4);
+                //double DistREst = GaussianDist(wheelDistanceR, wheelDistanceR * 0.75);
+                //double DistLEst = GaussianDist(wheelDistanceL, wheelDistanceL * 0.75);
+                PFEncoderDiffL = (currentEncoderPulseL - PFLastEncoderL);
+                PFEncoderDiffR = (currentEncoderPulseR - PFLastEncoderR);
 
-                double estAngleTravelled = (DistREst - DistLEst) / (2 * robotRadius);
-                double estDistanceTravelled = (DistREst + DistLEst) / 2;
+                // check for rollover
+                if (Math.Abs(PFEncoderDiffL) > pulsesPerRotation)
+                {
+                    PFEncoderDiffL = PFEncoderDiffL < 0 ? PFEncoderDiffL + encoderMax : encoderMax - PFEncoderDiffL;
+                }
+                if (Math.Abs(PFEncoderDiffR) > pulsesPerRotation)
+                {
+                    PFEncoderDiffR = PFEncoderDiffR < 0 ? PFEncoderDiffR + encoderMax : encoderMax - PFEncoderDiffR;
+                }
+  
+                // calculate wheel distance and change in distance and angle travelled
+                double PFDistanceL = (2 * Math.PI * wheelRadius * PFEncoderDiffL) / pulsesPerRotation;
+                double PFDistanceR = -(2 * Math.PI * wheelRadius * PFEncoderDiffR) / pulsesPerRotation;
+                PFDistanceL = GaussianDist(PFDistanceL, PFDistanceL * 0.2);
+                PFDistanceR = GaussianDist(PFDistanceR, PFDistanceR * 0.2);
+
+                double estAngleTravelled = (PFDistanceR - PFDistanceL) / (2 * robotRadius);
+                double estDistanceTravelled = (PFDistanceR + PFDistanceL) / 2;
+                //double estAngleTravelled = (DistREst - DistLEst) / (2 * robotRadius);
+                //double estDistanceTravelled = (DistREst + DistLEst) / 2;
 
                 double partDeltaX = estDistanceTravelled * Math.Cos(particles[i].t + (estAngleTravelled / 2));
                 double partDeltaY = estDistanceTravelled * Math.Sin(particles[i].t + (estAngleTravelled / 2));
                 double partDeltaT = estAngleTravelled;
                 propagatedParticles[i].x = particles[i].x + partDeltaX; 
-                propagatedParticles[i].y = particles[i].y + partDeltaY; 
+                propagatedParticles[i].y = particles[i].y + partDeltaY;
                 propagatedParticles[i].t = particles[i].t + partDeltaT;
 
-                if (newLaserData)
+                if (newLaserData && newMovement)
                 {
                     CalculateWeight(i);
                     totalWeight += propagatedParticles[i].w;
@@ -823,7 +866,7 @@ namespace DrRobot.JaguarControl
             double xTotal = 0;
             double yTotal = 0;
             double tTotal = 0;
-            if (newLaserData)
+            if (newLaserData && newMovement)
             {
                 List<int> tempParticles = new List<int>();
                 double stepSize = 1.0 / (numParticles * 5.0);
@@ -854,6 +897,7 @@ namespace DrRobot.JaguarControl
                     tTotal += particles[i].t + Math.PI;
                 }
                 newLaserData = false;
+                newMovement = false;
             }
             else
             {
@@ -872,6 +916,10 @@ namespace DrRobot.JaguarControl
             y_est = yTotal / numParticles;
             t_est = tTotal / numParticles;
             t_est -= Math.PI;
+
+            // update last encoder pulse
+            PFLastEncoderL = currentEncoderPulseL;
+            PFLastEncoderR = currentEncoderPulseR;
             // ****************** Additional Student Code: End   ************
         }
 
