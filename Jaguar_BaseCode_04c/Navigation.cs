@@ -11,7 +11,9 @@ namespace DrRobot.JaguarControl
     {
         #region Navigation Variables
         public long[] LaserData = new long[DrRobot.JaguarControl.JaguarCtrl.DISDATALEN];
-        public double initialX, initialY, initialT;
+        public double initialX = 0;//-3;
+        public double initialY = 0;//5.5;
+        public double initialT = 0;
         public double x, y, t;
         public double x_est, y_est, t_est;
         public double desiredX, desiredY, desiredT;
@@ -122,7 +124,7 @@ namespace DrRobot.JaguarControl
             jaguarControl = jc;
             realJaguar = jc.realJaguar;
             simulatedJaguar = jc.simulatedJaguar;
-            map = new Map();
+            map = new Map(this);
             particles = new Particle[numParticles];
             propagatedParticles = new Particle[numParticles];
             // Create particles
@@ -144,15 +146,18 @@ namespace DrRobot.JaguarControl
         // This is called every time the reset button is pressed
         public void Initialize()
         {
-            // Initialize state estimates
-            x = 0;//initialX;
-            y = 0;//initialY;
-            t = 0;//initialT;
+            initialX = map.xOffset - 3;
+            initialY = map.yOffset - 9.5;
 
             // Initialize state estimates
-            x_est = 0;//initialX;
-            y_est = 0;//initialY;
-            t_est = 0;//initialT;
+            x = initialX;
+            y = initialY;
+            t = initialT;
+
+            // Initialize state estimates
+            x_est = initialX;
+            y_est = initialY;
+            t_est = initialT;
 
             x_prev = x;
             y_prev = y;
@@ -682,11 +687,18 @@ namespace DrRobot.JaguarControl
 
 
         //private double[] waypoints = { 2, 1, 1, 3, 2, 0, 4, 1, -1, 5, 0, 3.14, 0, 0, 3.14 };
-        private double[] waypoints = {0.5, -0.5, -1.4, 1, -4, -1, 4, -4.5, 0 };
+        // for lab 4 test
+        //private double[] waypoints = {0.5, -0.5, -1.4, 1, -4, -1, 4, -4.5, 0 };
+        private double[] waypoints = { 0, -10, -1.4, 0, 0, -1.7};
         private int currentWaypoint = 0;
         // THis function is called to follow a trajectory constructed by PRMMotionPlanner()
         private void TrackTrajectory()
         {
+            for (int i = 0; i < waypoints.Length; i += 3)
+            {
+                waypoints[i] += map.xOffset;
+                waypoints[i+1] += map.yOffset;
+            }
 
             desiredX = waypoints[currentWaypoint];
             desiredY = waypoints[currentWaypoint + 1];

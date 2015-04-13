@@ -41,7 +41,7 @@ namespace DrRobot.JaguarControl
         GoogleEarth gEarth = new GoogleEarth();
         public double mapResolution;
         public float metersToPixels = 10;
-        private double zoomConstant = 2.0;
+        private double zoomConstant = 0.3; //2.0
         private static int paneWidth = 484;
         private static int paneHeight = 415;
         private static int xMin = 11; 
