@@ -52,7 +52,7 @@ namespace DrRobot.JaguarControl
         public double robotRadius = 0.242;//0.232
         private double angleTravelled, distanceTravelled;
         private double diffEncoderPulseL, diffEncoderPulseR;
-        private double maxVelocity = 0.25;
+        private double maxVelocity = 0.19;//0.25;
         private double Kpho = 1;
         private double Kalpha = 4;//8
         private double Kbeta = -0.5;//-0.5//-1.0;
@@ -150,6 +150,7 @@ namespace DrRobot.JaguarControl
             initialY = map.yOffset - 9.5;
 
             map.currentRegion = 0;
+            currentWaypoint = 0;
             
             waypoints = new double[origwaypoints.Length];
             for (int i = 0; i < waypoints.Length; i += 3)
@@ -699,7 +700,7 @@ namespace DrRobot.JaguarControl
         //private double[] waypoints = { 2, 1, 1, 3, 2, 0, 4, 1, -1, 5, 0, 3.14, 0, 0, 3.14 };
         // for lab 4 test
         //private double[] waypoints = {0.5, -0.5, -1.4, 1, -4, -1, 4, -4.5, 0 };
-        private double[] origwaypoints = {0, -10, -0.4, 0, -11, -1.5, 0, -14, -1.6, 2, -22, -1.7};
+        private double[] origwaypoints = {0, -10, -0.4, 0, -12, -1.5, 1, -14, -1.6, 2, -18, -1.65, 2, -22, -1.7};
         private double[] waypoints;
         private int currentWaypoint = 0;
         // THis function is called to follow a trajectory constructed by PRMMotionPlanner()
@@ -714,7 +715,7 @@ namespace DrRobot.JaguarControl
             double deltaY = desiredY - y_est;
             double deltaT = desiredT - t_est;
             double distToDest = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
-            if (Math.Abs(deltaT) < 0.3 && distToDest < 0.4/*0.2*/ && currentWaypoint < waypoints.Length - 3)
+            if (Math.Abs(deltaT) < 0.4 && distToDest < 0.4/*0.2*/ && currentWaypoint < waypoints.Length - 3)
             {
                 currentWaypoint += 3;
                 desiredX = waypoints[currentWaypoint];
@@ -760,11 +761,11 @@ namespace DrRobot.JaguarControl
             diffEncoderPulseL = currentEncoderPulseL - lastEncoderPulseL;
             diffEncoderPulseR = -(currentEncoderPulseR - lastEncoderPulseR);
             // check for rollover
-            if (Math.Abs(diffEncoderPulseL) > pulsesPerRotation)
+            if (Math.Abs(diffEncoderPulseL) > 5 * pulsesPerRotation)
             {
                 diffEncoderPulseL = diffEncoderPulseL < 0 ? diffEncoderPulseL + encoderMax : encoderMax - diffEncoderPulseL;
             }
-            if (Math.Abs(diffEncoderPulseR) > pulsesPerRotation)
+            if (Math.Abs(diffEncoderPulseR) > 5 * pulsesPerRotation)
             {
                 diffEncoderPulseR = diffEncoderPulseR < 0 ? diffEncoderPulseR + encoderMax : encoderMax - diffEncoderPulseR;
             }
@@ -841,34 +842,46 @@ namespace DrRobot.JaguarControl
             // Put code here to calculate x_est, y_est, t_est using a PF
             double totalWeight = 0;
 
-           
+
+
+
             for (int i = 0; i < numParticles; ++i)
             {
-                //double DistREst = GaussianDist(wheelDistanceR, wheelDistanceR * 0.75);
-                //double DistLEst = GaussianDist(wheelDistanceL, wheelDistanceL * 0.75);
                 PFEncoderDiffL = (currentEncoderPulseL - PFLastEncoderL);
-                PFEncoderDiffR = (currentEncoderPulseR - PFLastEncoderR);
+                PFEncoderDiffR = -(currentEncoderPulseR - PFLastEncoderR);
+                double tempDiffL = PFEncoderDiffL;
+                double tempDiffR = PFEncoderDiffR;
 
                 // check for rollover
-                if (Math.Abs(PFEncoderDiffL) > pulsesPerRotation)
+                if (Math.Abs(PFEncoderDiffL) > 5 * pulsesPerRotation)
                 {
                     PFEncoderDiffL = PFEncoderDiffL < 0 ? PFEncoderDiffL + encoderMax : encoderMax - PFEncoderDiffL;
                 }
-                if (Math.Abs(PFEncoderDiffR) > pulsesPerRotation)
+                if (Math.Abs(PFEncoderDiffR) > 5 * pulsesPerRotation)
                 {
                     PFEncoderDiffR = PFEncoderDiffR < 0 ? PFEncoderDiffR + encoderMax : encoderMax - PFEncoderDiffR;
                 }
-  
+
                 // calculate wheel distance and change in distance and angle travelled
                 double PFDistanceL = (2 * Math.PI * wheelRadius * PFEncoderDiffL) / pulsesPerRotation;
-                double PFDistanceR = -(2 * Math.PI * wheelRadius * PFEncoderDiffR) / pulsesPerRotation;
+                double PFDistanceR = (2 * Math.PI * wheelRadius * PFEncoderDiffR) / pulsesPerRotation;
+
+                //double PFDistanceR = GaussianDist(wheelDistanceR, wheelDistanceR * 0.2);
+                //double PFDistanceL = GaussianDist(wheelDistanceL, wheelDistanceL * 0.2);
+                
                 PFDistanceL = GaussianDist(PFDistanceL, PFDistanceL * 0.2);
                 PFDistanceR = GaussianDist(PFDistanceR, PFDistanceR * 0.2);
 
                 double estAngleTravelled = (PFDistanceR - PFDistanceL) / (2 * robotRadius);
                 double estDistanceTravelled = (PFDistanceR + PFDistanceL) / 2;
-                //double estAngleTravelled = (DistREst - DistLEst) / (2 * robotRadius);
-                //double estDistanceTravelled = (DistREst + DistLEst) / 2;
+
+                if (estDistanceTravelled > 5)
+                {
+                    Console.WriteLine("PREROLL Left Encoder: " + tempDiffL + " PREROLL Right Encoder: " + tempDiffR);
+                    Console.WriteLine("Left Encoder: " + PFEncoderDiffL + " Right Encoder: " + PFEncoderDiffR);
+                    Console.WriteLine("Left: " + PFDistanceL + " Right: " + PFDistanceR);
+                    Console.WriteLine("who knows");
+                }
 
                 double partDeltaX = estDistanceTravelled * Math.Cos(particles[i].t + (estAngleTravelled / 2));
                 double partDeltaY = estDistanceTravelled * Math.Sin(particles[i].t + (estAngleTravelled / 2));
