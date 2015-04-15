@@ -19,11 +19,20 @@ namespace DrRobot.JaguarControl
         private double maxWorkspaceX =  10;
         private double minWorkspaceY = -10;
         private double maxWorkspaceY =  10;
-        public double yOffset = 25;
+        public double yOffset = 10;
         public double xOffset = 0;
 
-        public int[] region1 = {0, 23};
-        public int[] region2 = { 23, 217 };
+        //public int[] region1 = {0, 23};
+        //public int[] region2 = { 23, 217 };
+
+        public static int[] region1 = new[]{ 8, 9, 10, 18, 19, 20, 21, 22 };
+        public static int[] region2 = new[]{ 8, 9, 18, 19, 16, 17, 20, 21};
+        public static int[] region3 = new[]{ 16, 17, 18, 19,
+            39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54,
+            55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70};
+
+        public int[][] regions = new[] { region1, region1, region2, region3 };
+        public int currentRegion = 0;
 
         public Map(Navigation nav)
         {
@@ -1056,6 +1065,7 @@ mapSegmentCorners[216, 1, 1] = -60.540000;
 
 	        // Put code here that loops through segments, calling the
 	        // function GetWallDistance.
+            /*
             int start;
             int end;
             if (navigation.y_est > yOffset - 17)
@@ -1067,10 +1077,11 @@ mapSegmentCorners[216, 1, 1] = -60.540000;
             {
                 start = region2[0];
                 end = region2[1];
-            }
-            for (int i = start; i < end; ++i)
+            }*/
+            int[] area = regions[currentRegion];
+            for (int i = 0; i < area.Length; ++i)
             {
-                double currentWallDist = GetWallDistance(x, y, t, i);
+                double currentWallDist = GetWallDistance(x, y, t, area[i]);
                 if (currentWallDist < minDist)
                 {
                     minDist = currentWallDist;

@@ -149,6 +149,16 @@ namespace DrRobot.JaguarControl
             initialX = map.xOffset - 3;
             initialY = map.yOffset - 9.5;
 
+            map.currentRegion = 0;
+            
+            waypoints = new double[origwaypoints.Length];
+            for (int i = 0; i < waypoints.Length; i += 3)
+            {
+                waypoints[i] = origwaypoints[i] + map.xOffset;
+                waypoints[i + 1] = origwaypoints[i + 1] + map.yOffset;
+                waypoints[i + 2] = origwaypoints[i + 2];
+            }
+
             // Initialize state estimates
             x = initialX;
             y = initialY;
@@ -689,32 +699,34 @@ namespace DrRobot.JaguarControl
         //private double[] waypoints = { 2, 1, 1, 3, 2, 0, 4, 1, -1, 5, 0, 3.14, 0, 0, 3.14 };
         // for lab 4 test
         //private double[] waypoints = {0.5, -0.5, -1.4, 1, -4, -1, 4, -4.5, 0 };
-        private double[] waypoints = { 0, -10, -1.4, 0, 0, -1.7};
+        private double[] origwaypoints = {0, -10, -0.4, 0, -11, -1.5, 0, -14, -1.6, 2, -22, -1.7};
+        private double[] waypoints;
         private int currentWaypoint = 0;
         // THis function is called to follow a trajectory constructed by PRMMotionPlanner()
         private void TrackTrajectory()
         {
-            for (int i = 0; i < waypoints.Length; i += 3)
-            {
-                waypoints[i] += map.xOffset;
-                waypoints[i+1] += map.yOffset;
-            }
 
             desiredX = waypoints[currentWaypoint];
             desiredY = waypoints[currentWaypoint + 1];
             desiredT = waypoints[currentWaypoint + 2];
+            //Console.WriteLine("going to X: " + desiredX + " Y: " + desiredY + " T: " + desiredT);
             double deltaX = desiredX - x_est;
             double deltaY = desiredY - y_est;
             double deltaT = desiredT - t_est;
             double distToDest = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
-            if (Math.Abs(deltaT) < 0.3 && distToDest < 0.2 && currentWaypoint < waypoints.Length - 3)
+            if (Math.Abs(deltaT) < 0.3 && distToDest < 0.4/*0.2*/ && currentWaypoint < waypoints.Length - 3)
             {
                 currentWaypoint += 3;
                 desiredX = waypoints[currentWaypoint];
                 desiredY = waypoints[currentWaypoint + 1];
                 desiredT = waypoints[currentWaypoint + 2];
+                if (map.currentRegion < map.regions.Length-1)
+                {
+                    ++map.currentRegion;
+                }
             }
             FlyToSetPoint();
+            
         }
 
         // THis function is called to construct a collision-free trajectory for the robot to follow

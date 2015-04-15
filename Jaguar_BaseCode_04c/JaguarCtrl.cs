@@ -41,7 +41,7 @@ namespace DrRobot.JaguarControl
         GoogleEarth gEarth = new GoogleEarth();
         public double mapResolution;
         public float metersToPixels = 10;
-        private double zoomConstant = 0.3; //2.0
+        private double zoomConstant = 0.5; //2.0
         private static int paneWidth = 484;
         private static int paneHeight = 415;
         private static int xMin = 11; 
@@ -297,6 +297,7 @@ namespace DrRobot.JaguarControl
                 g.FillEllipse(Brushes.LightGray, X_laser, Y_laser, laserDiameter, laserDiameter);
 
                 // Draw Walls
+                /*
                 for (int w = 0; w < navigation.map.numMapSegments; w++)
                 {
                     g.DrawLine(wallPen, (float)(xCenter + mapResolution * navigation.map.mapSegmentCorners[w, 0, 0]), 
@@ -304,35 +305,49 @@ namespace DrRobot.JaguarControl
                         (float)(xCenter + mapResolution * navigation.map.mapSegmentCorners[w, 1, 0]),
                         (float)(yCenter - mapResolution * navigation.map.mapSegmentCorners[w, 1, 1]));
 
+                }*/
+                int[] region = navigation.map.regions[navigation.map.currentRegion];
+                for (int w = 0; w < region.Length; w++)
+                {
+                    
+                    g.DrawLine(wallPen, (float)(xCenter + mapResolution * navigation.map.mapSegmentCorners[region[w], 0, 0]),
+                        (float)(yCenter - mapResolution * navigation.map.mapSegmentCorners[region[w], 0, 1]),
+                        (float)(xCenter + mapResolution * navigation.map.mapSegmentCorners[region[w], 1, 0]),
+                        (float)(yCenter - mapResolution * navigation.map.mapSegmentCorners[region[w], 1, 1]));
+
                 }
 
                 // Draw Particles
+            
                 int partSize = (int)(0.16*mapResolution);
                 int partHalfSize = (int)(0.08 * mapResolution);
-                for (int p = 0; p < navigation.numParticles; p++)
+                if (partSize > 0)
                 {
-                    int drawParticleX = (int)(xCenter - partHalfSize + mapResolution * navigation.particles[p].x);
-                    int drawParticleY = (int)(yCenter - partHalfSize - mapResolution * navigation.particles[p].y);
-                    int drawParticleStartAngle = (int)(-navigation.particles[p].t * 180 / 3.14 - 180 - 25);
-                    g.DrawPie(particlePen, drawParticleX, drawParticleY, partSize, partSize, drawParticleStartAngle, 50);
+                    for (int p = 0; p < navigation.numParticles; p++)
+                    {
+                        int drawParticleX = (int)(xCenter - partHalfSize + mapResolution * navigation.particles[p].x);
+                        int drawParticleY = (int)(yCenter - partHalfSize - mapResolution * navigation.particles[p].y);
+                        int drawParticleStartAngle = (int)(-navigation.particles[p].t * 180 / 3.14 - 180 - 25);
+                        g.DrawPie(particlePen, drawParticleX, drawParticleY, partSize, partSize, drawParticleStartAngle, 50);
+                    }
+                    // Draw State Estimate
+                    g.DrawPie(estimatePen, (int)(xCenter - partHalfSize + mapResolution * navigation.x_est), (int)(yCenter - partHalfSize - mapResolution * navigation.y_est), partSize, partSize, (int)(-navigation.t_est * 180 / 3.14 - 180 - 25), 50);
                 }
-
+                
                 // Draw a test line too see how it works
                 //g.DrawLine(laserPen, (int) xCenter, (int) yCenter, (int) (xCenter + mapResolution * navigation.x), (int) (yCenter - mapResolution * navigation.y));
 
                 // Draw center laser scan measurements. Something is not working right now.
-                /*for (int i = 0; i < navigation.LaserData.Length; i = i + navigation.laserStepSize)
+                /*
+                for (int i = 0; i < navigation.LaserData.Length; i = i + navigation.laserStepSize)
                 {
                     double distanceToWall = navigation.LaserData[i] / (double)1000; // central laser range convert back to meters
                     double xFromRobot = distanceToWall * Math.Cos(navigation.t - 1.57 + navigation.laserAngles[i]);
                     double yFromRobot = distanceToWall * Math.Sin(navigation.t - 1.57 + navigation.laserAngles[i]);
                     g.DrawLine(laserPen, (int)(xCenter + mapResolution * navigation.x), (int)(yCenter - mapResolution * navigation.y),
                                          (int)(xCenter + mapResolution * (navigation.x + xFromRobot)), (int)(yCenter - mapResolution * (navigation.y + yFromRobot)));
-                }
-                */
-
-                // Draw State Estimate
-                g.DrawPie(estimatePen, (int)(xCenter - partHalfSize + mapResolution * navigation.x_est), (int)(yCenter - partHalfSize - mapResolution * navigation.y_est), partSize, partSize, (int)(-navigation.t_est * 180 / 3.14 - 180 - 25), 50);
+                }*/
+                
 
                 // Paint background of bitmap
                 g.FillRectangle(Brushes.LightGray, new Rectangle(xMin - 40, yMin, 40, paneHeight));
