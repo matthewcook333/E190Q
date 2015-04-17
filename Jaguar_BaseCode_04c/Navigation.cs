@@ -52,7 +52,7 @@ namespace DrRobot.JaguarControl
         public double robotRadius = 0.242;//0.232
         private double angleTravelled, distanceTravelled;
         private double diffEncoderPulseL, diffEncoderPulseR;
-        private double maxVelocity = 0.23;//0.21;//0.25;
+        private double maxVelocity = 2;//0.23;//0.21;//0.25;
         private double Kpho = 1;
         private double Kalpha = 4;//4;//8
         private double Kbeta = -0.5;//-0.5//-1.0;
@@ -147,7 +147,7 @@ namespace DrRobot.JaguarControl
         public void Initialize()
         {
             initialX = map.xOffset - 3;
-            initialY = map.yOffset - 9.5;
+            initialY = map.yOffset - 11;// 9.5;
 
             map.currentRegion = 0;
             currentWaypoint = 0;
@@ -700,9 +700,9 @@ namespace DrRobot.JaguarControl
         //private double[] waypoints = { 2, 1, 1, 3, 2, 0, 4, 1, -1, 5, 0, 3.14, 0, 0, 3.14 };
         // for lab 4 test
         //private double[] waypoints = {0.5, -0.5, -1.4, 1, -4, -1, 4, -4.5, 0 };
-        private double[] origwaypoints = {0, -10, -0.4, 0, -12, -1.5, 0.25, -14, -1.6, 1.75, -16, -1.5, 1.75, -18, -1.5, 
-                                             1.75, -20, -1.5, 2, -22, -1.7,
-                                         1.5, -25, -1.8, 1, -28, -1.8, 0, -30, -1.57, 0, -34, -1.57,
+        private double[] origwaypoints = {0, -11.5, -0.4, 0, -13.5, -1.5, 0.25, -15.5, -1.6, 1.75, -17.5, -1.5, 1.75, -19.5, -1.5, 
+                                             1.75, -21.5, -1.5, 2, -23.5, -1.7,
+                                         1.5, -26.5, -1.8, 1, -28, -1.8, 0, -30, -1.57, 0, -34, -1.57,
                                          0, -30, -1.57, 0, -30, 0, 4, -30, 0};
         private double[] waypoints;
         private int currentWaypoint = 0;
@@ -717,7 +717,7 @@ namespace DrRobot.JaguarControl
             double deltaY = desiredY - y_est;
             double deltaT = desiredT - t_est;
             double distToDest = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
-            if (/*Math.Abs(deltaT) < 0.4 &&*/ distToDest < 0.4/*0.2*/ && currentWaypoint < waypoints.Length - 3)
+            if (Math.Abs(deltaT) < 0.4 && distToDest < 0.4/*0.2*/ && currentWaypoint < waypoints.Length - 3)
             {
                 Thread.Sleep(2000);
                 currentWaypoint += 3;
