@@ -51,7 +51,7 @@ namespace DrRobot.JaguarControl
         private double diffEncoderPulseL, diffEncoderPulseR;
         private double maxVelocity = 0.25;
         private double Kpho = 1;
-        private double Kalpha = 4;//2; //8
+        private double Kalpha = 100;//2; //8
         private double Kbeta = -0.5;//-0.5//-1.0;
         const double alphaTrackingAccuracy = 0.10;
         const double betaTrackingAccuracy = 0.1;

@@ -52,9 +52,9 @@ namespace DrRobot.JaguarControl
         public double robotRadius = 0.242;//0.232
         private double angleTravelled, distanceTravelled;
         private double diffEncoderPulseL, diffEncoderPulseR;
-        private double maxVelocity = 0.19;//0.25;
+        private double maxVelocity = 0.23;//0.21;//0.25;
         private double Kpho = 1;
-        private double Kalpha = 4;//8
+        private double Kalpha = 4;//4;//8
         private double Kbeta = -0.5;//-0.5//-1.0;
         const double alphaTrackingAccuracy = 0.10;
         const double betaTrackingAccuracy = 0.1;
@@ -400,7 +400,7 @@ namespace DrRobot.JaguarControl
 
                 // Get most recent laser scanner measurements
                 laserCounter = laserCounter + deltaT;
-                if (laserCounter >= 2000)
+                if (laserCounter >= 1500)
                 {
                     for (int i = 0; i < LaserData.Length; i=i+laserStepSize)
                     {
@@ -700,7 +700,10 @@ namespace DrRobot.JaguarControl
         //private double[] waypoints = { 2, 1, 1, 3, 2, 0, 4, 1, -1, 5, 0, 3.14, 0, 0, 3.14 };
         // for lab 4 test
         //private double[] waypoints = {0.5, -0.5, -1.4, 1, -4, -1, 4, -4.5, 0 };
-        private double[] origwaypoints = {0, -10, -0.4, 0, -12, -1.5, 1, -14, -1.6, 2, -18, -1.65, 2, -22, -1.7};
+        private double[] origwaypoints = {0, -10, -0.4, 0, -12, -1.5, 0.25, -14, -1.6, 1.75, -16, -1.5, 1.75, -18, -1.5, 
+                                             1.75, -20, -1.5, 2, -22, -1.7,
+                                         1.5, -25, -1.8, 1, -28, -1.8, 0, -30, -1.57, 0, -34, -1.57,
+                                         0, -30, -1.57, 0, -30, 0, 4, -30, 0};
         private double[] waypoints;
         private int currentWaypoint = 0;
         // THis function is called to follow a trajectory constructed by PRMMotionPlanner()
@@ -710,17 +713,18 @@ namespace DrRobot.JaguarControl
             desiredX = waypoints[currentWaypoint];
             desiredY = waypoints[currentWaypoint + 1];
             desiredT = waypoints[currentWaypoint + 2];
-            //Console.WriteLine("going to X: " + desiredX + " Y: " + desiredY + " T: " + desiredT);
             double deltaX = desiredX - x_est;
             double deltaY = desiredY - y_est;
             double deltaT = desiredT - t_est;
             double distToDest = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
-            if (Math.Abs(deltaT) < 0.4 && distToDest < 0.4/*0.2*/ && currentWaypoint < waypoints.Length - 3)
+            if (/*Math.Abs(deltaT) < 0.4 &&*/ distToDest < 0.4/*0.2*/ && currentWaypoint < waypoints.Length - 3)
             {
+                Thread.Sleep(2000);
                 currentWaypoint += 3;
                 desiredX = waypoints[currentWaypoint];
                 desiredY = waypoints[currentWaypoint + 1];
                 desiredT = waypoints[currentWaypoint + 2];
+                //Console.WriteLine("going to X: " + desiredX + " Y: " + desiredY + " T: " + desiredT);
                 if (map.currentRegion < map.regions.Length-1)
                 {
                     ++map.currentRegion;
@@ -761,11 +765,11 @@ namespace DrRobot.JaguarControl
             diffEncoderPulseL = currentEncoderPulseL - lastEncoderPulseL;
             diffEncoderPulseR = -(currentEncoderPulseR - lastEncoderPulseR);
             // check for rollover
-            if (Math.Abs(diffEncoderPulseL) > 5 * pulsesPerRotation)
+            if (Math.Abs(diffEncoderPulseL) > 20 * pulsesPerRotation)
             {
                 diffEncoderPulseL = diffEncoderPulseL < 0 ? diffEncoderPulseL + encoderMax : encoderMax - diffEncoderPulseL;
             }
-            if (Math.Abs(diffEncoderPulseR) > 5 * pulsesPerRotation)
+            if (Math.Abs(diffEncoderPulseR) > 20 * pulsesPerRotation)
             {
                 diffEncoderPulseR = diffEncoderPulseR < 0 ? diffEncoderPulseR + encoderMax : encoderMax - diffEncoderPulseR;
             }
@@ -853,11 +857,11 @@ namespace DrRobot.JaguarControl
                 double tempDiffR = PFEncoderDiffR;
 
                 // check for rollover
-                if (Math.Abs(PFEncoderDiffL) > 5 * pulsesPerRotation)
+                if (Math.Abs(PFEncoderDiffL) > 20 * pulsesPerRotation)
                 {
                     PFEncoderDiffL = PFEncoderDiffL < 0 ? PFEncoderDiffL + encoderMax : encoderMax - PFEncoderDiffL;
                 }
-                if (Math.Abs(PFEncoderDiffR) > 5 * pulsesPerRotation)
+                if (Math.Abs(PFEncoderDiffR) > 20 * pulsesPerRotation)
                 {
                     PFEncoderDiffR = PFEncoderDiffR < 0 ? PFEncoderDiffR + encoderMax : encoderMax - PFEncoderDiffR;
                 }
@@ -869,12 +873,12 @@ namespace DrRobot.JaguarControl
                 //double PFDistanceR = GaussianDist(wheelDistanceR, wheelDistanceR * 0.2);
                 //double PFDistanceL = GaussianDist(wheelDistanceL, wheelDistanceL * 0.2);
                 
-                PFDistanceL = GaussianDist(PFDistanceL, PFDistanceL * 0.2);
-                PFDistanceR = GaussianDist(PFDistanceR, PFDistanceR * 0.2);
+                PFDistanceL = GaussianDist(PFDistanceL, PFDistanceL * 0.10);//0.2);
+                PFDistanceR = GaussianDist(PFDistanceR, PFDistanceR * 0.10);//0.2);
 
                 double estAngleTravelled = (PFDistanceR - PFDistanceL) / (2 * robotRadius);
                 double estDistanceTravelled = (PFDistanceR + PFDistanceL) / 2;
-
+                /*
                 if (estDistanceTravelled > 5)
                 {
                     Console.WriteLine("PREROLL Left Encoder: " + tempDiffL + " PREROLL Right Encoder: " + tempDiffR);
@@ -882,7 +886,7 @@ namespace DrRobot.JaguarControl
                     Console.WriteLine("Left: " + PFDistanceL + " Right: " + PFDistanceR);
                     Console.WriteLine("who knows");
                 }
-
+                */
                 double partDeltaX = estDistanceTravelled * Math.Cos(particles[i].t + (estAngleTravelled / 2));
                 double partDeltaY = estDistanceTravelled * Math.Sin(particles[i].t + (estAngleTravelled / 2));
                 double partDeltaT = estAngleTravelled;

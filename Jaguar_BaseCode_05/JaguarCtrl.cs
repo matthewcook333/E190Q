@@ -41,7 +41,7 @@ namespace DrRobot.JaguarControl
         GoogleEarth gEarth = new GoogleEarth();
         public double mapResolution;
         public float metersToPixels = 10;
-        private double zoomConstant = 2.0;
+        private double zoomConstant = 0.5;//2.0;
         private static int paneWidth = 484;
         private static int paneHeight = 415;
         private static int xMin = 11; 
@@ -320,18 +320,20 @@ namespace DrRobot.JaguarControl
                 // Draw Particles
                 int partSize = (int)(0.16 * mapResolution);
                 int partHalfSize = (int)(0.08 * mapResolution);
-                for (int p = 0; p < navigation.numParticles; p++)
+                if (partSize != 0)
                 {
-                    int drawParticleX = (int)(xCenter - partHalfSize + mapResolution * navigation.particles[p].x);
-                    int drawParticleY = (int)(yCenter - partHalfSize - mapResolution * navigation.particles[p].y);
-                    int drawParticleStartAngle = (int)(-navigation.particles[p].t * 180 / 3.14 - 180 - 25);
-                    g.DrawPie(particlePen, drawParticleX, drawParticleY, partSize, partSize, drawParticleStartAngle, 50);
+                    for (int p = 0; p < navigation.numParticles; p++)
+                    {
+                        int drawParticleX = (int)(xCenter - partHalfSize + mapResolution * navigation.particles[p].x);
+                        int drawParticleY = (int)(yCenter - partHalfSize - mapResolution * navigation.particles[p].y);
+                        int drawParticleStartAngle = (int)(-navigation.particles[p].t * 180 / 3.14 - 180 - 25);
+                        g.DrawPie(particlePen, drawParticleX, drawParticleY, partSize, partSize, drawParticleStartAngle, 50);
+                    }
+
+
+                    // Draw State Estimate
+                    g.DrawPie(estimatePen, (int)(xCenter - partHalfSize + mapResolution * navigation.x_est), (int)(yCenter - partHalfSize - mapResolution * navigation.y_est), partSize, partSize, (int)(-navigation.t_est * 180 / 3.14 - 180 - 25), 50);
                 }
-
-
-                // Draw State Estimate
-                g.DrawPie(estimatePen, (int)(xCenter - partHalfSize + mapResolution * navigation.x_est), (int)(yCenter - partHalfSize - mapResolution * navigation.y_est), partSize, partSize, (int)(-navigation.t_est * 180 / 3.14 - 180 - 25), 50);
-
                 // Paint background of bitmap
                 g.FillRectangle(Brushes.LightGray, new Rectangle(xMin - 40, yMin, 40, paneHeight));
 
