@@ -52,9 +52,9 @@ namespace DrRobot.JaguarControl
         public double robotRadius = 0.242;//0.232
         private double angleTravelled, distanceTravelled;
         private double diffEncoderPulseL, diffEncoderPulseR;
-        private double maxVelocity = 2;//0.23;//0.21;//0.25;
+        private double maxVelocity = 0.21;//0.23;//0.21;//0.25;
         private double Kpho = 1;
-        private double Kalpha = 4;//4;//8
+        private double Kalpha = 8;//4;//4;//8
         private double Kbeta = -0.5;//-0.5//-1.0;
         const double alphaTrackingAccuracy = 0.10;
         const double betaTrackingAccuracy = 0.1;
@@ -453,9 +453,9 @@ namespace DrRobot.JaguarControl
             short zeroOutput = 16383;
             short maxPosOutput = 32767;
 
-            double K_u = 163;// 140;
-            double T_u = 29;// 8;
-            double K_p = 0.6 /*0.725*/ * K_u;// 25;
+            double K_u = 140;// 163;// 140;
+            double T_u = 15;// 29;// 8;
+            double K_p = 0.6 /*0.625*/ * K_u;// 25;
             double K_i = 2 * K_p / T_u;// 0.1;
             double K_d = K_p * T_u / 8;// 1;
 
@@ -619,11 +619,11 @@ namespace DrRobot.JaguarControl
             double alpha = AngleDiff(t_est, Math.Atan2(deltaY, deltaX));
             int isBackwards = 1;
             // Check if its optimal to travel backwards!
-            if (Math.Abs(alpha) > Math.PI / 2)
+            /*if (Math.Abs(alpha) > Math.PI / 2)
             {
                 alpha = AngleDiff(t_est, Math.Atan2(-deltaY, -deltaX));
                 isBackwards = -1;
-            }
+            }*/
 
             double beta = AngleDiff(t_est, -alpha);
             // adding desired T
@@ -660,7 +660,7 @@ namespace DrRobot.JaguarControl
             {
                 double thetaError = AngleDiff(desiredT, t_est);
                 double epsilon = 0.175;
-                short spinSpeed = (short)(60 + Math.Abs(thetaError) * 15 / Math.PI);
+                short spinSpeed = (short)(/*60*/ 50 + Math.Abs(thetaError) * 25/*15*/ / Math.PI);
 
                 if (thetaError > 0 && Math.Abs(thetaError) > epsilon)
                 {
@@ -700,10 +700,22 @@ namespace DrRobot.JaguarControl
         //private double[] waypoints = { 2, 1, 1, 3, 2, 0, 4, 1, -1, 5, 0, 3.14, 0, 0, 3.14 };
         // for lab 4 test
         //private double[] waypoints = {0.5, -0.5, -1.4, 1, -4, -1, 4, -4.5, 0 };
-        private double[] origwaypoints = {0, -11.5, -0.4, 0, -13.5, -1.5, 0.25, -15.5, -1.6, 1.75, -17.5, -1.5, 1.75, -19.5, -1.5, 
-                                             1.75, -21.5, -1.5, 2, -23.5, -1.7,
-                                         1.5, -26.5, -1.8, 1, -28, -1.8, 0, -30, -1.57, 0, -34, -1.57,
-                                         0, -30, -1.57, 0, -30, 0, 4, -30, 0};
+        private double[] origwaypoints = {0, -11.25, -0.4, 
+                                          0, -13.5, -1.5, 
+                                          0.25, -15.5, -1.6, 
+                                          1.75, -17.5, -1.5, 
+                                          1.75, -19.5, -1.5, 
+                                          1.75, -21.5, -1.5, 
+                                          2, -23.5, -1.7,
+                                          1.5, -26.5, -1.8,
+                                          1, -28, -1.8, 
+                                          0.5, -30, -1.57,
+                                          0.5, -32, -1.57, 
+                                          0.5, -34, -1.57,
+                                          0.5, -34, 1.57, 
+                                          0.5, -30, 1.57, 
+                                          0.5, -30, 0, 
+                                          4, -30, 0};
         private double[] waypoints;
         private int currentWaypoint = 0;
         // THis function is called to follow a trajectory constructed by PRMMotionPlanner()
@@ -715,20 +727,21 @@ namespace DrRobot.JaguarControl
             desiredT = waypoints[currentWaypoint + 2];
             double deltaX = desiredX - x_est;
             double deltaY = desiredY - y_est;
-            double deltaT = desiredT - t_est;
+            double deltaT = AngleDiff(desiredT, t_est);
             double distToDest = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
-            if (Math.Abs(deltaT) < 0.4 && distToDest < 0.4/*0.2*/ && currentWaypoint < waypoints.Length - 3)
+            Console.WriteLine("current wp: " + currentWaypoint + " deltaT: " + deltaT + " distToDest: " + distToDest + " waypoints length: " + waypoints.Length);
+            if (Math.Abs(deltaT) < 0.34 && distToDest < 0.3/*0.2*/ && currentWaypoint < waypoints.Length - 3)
             {
-                Thread.Sleep(2000);
                 currentWaypoint += 3;
                 desiredX = waypoints[currentWaypoint];
                 desiredY = waypoints[currentWaypoint + 1];
                 desiredT = waypoints[currentWaypoint + 2];
-                //Console.WriteLine("going to X: " + desiredX + " Y: " + desiredY + " T: " + desiredT);
+                Console.WriteLine("going to X: " + desiredX + " Y: " + desiredY + " T: " + desiredT);
                 if (map.currentRegion < map.regions.Length-1)
                 {
                     ++map.currentRegion;
                 }
+                Thread.Sleep(2000);
             }
             FlyToSetPoint();
             
@@ -873,8 +886,8 @@ namespace DrRobot.JaguarControl
                 //double PFDistanceR = GaussianDist(wheelDistanceR, wheelDistanceR * 0.2);
                 //double PFDistanceL = GaussianDist(wheelDistanceL, wheelDistanceL * 0.2);
                 
-                PFDistanceL = GaussianDist(PFDistanceL, PFDistanceL * 0.10);//0.2);
-                PFDistanceR = GaussianDist(PFDistanceR, PFDistanceR * 0.10);//0.2);
+                PFDistanceL = GaussianDist(PFDistanceL, PFDistanceL * 0.15);//0.10);//0.2);
+                PFDistanceR = GaussianDist(PFDistanceR, PFDistanceR * 0.15);//0.10);//0.2);
 
                 double estAngleTravelled = (PFDistanceR - PFDistanceL) / (2 * robotRadius);
                 double estDistanceTravelled = (PFDistanceR + PFDistanceL) / 2;

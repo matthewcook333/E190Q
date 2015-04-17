@@ -42,13 +42,15 @@ namespace DrRobot.JaguarControl
              39, /*40,*/ 41, 42,
             47, 48, /*49,*/ 50, 55, 56, /*57,*/ 58, 242};
         public static int[] region4 = new[] {51, /*52,*/ 53, 54, 59, 60, 61, /*62,*/
-            217, 221, 226, 227, 240, 241};
-        public static int[] regionCenterTop = new[] {217, 221, 226, 227, 240, 241 };
-        public static int[] region5 = new[] {217, 218, 221, 224, 225, 226, 227, 240, 241 };
+            217, 221, 226, 227, 240, 241, 243};
+        public static int[] regionCenterTop = new[] {217, 221, 226, 227, 240, 241, 243 };
+        public static int[] region5 = new[] {217, 218, 221, 224, 225, 226, 227, 240, 241, 243};
  
 
-        public int[][] regions = new[] { region1, region1, region2, regionTopColumns, regionTopColumns, region3, region3, region4, region4, regionCenterTop,
-            regionCenterTop, regionCenterTop, regionCenterTop};
+        public int[][] regions = new[] {region1, region1, region2, regionTopColumns, 
+            regionTopColumns, region3, region3, region4, 
+            region4, region4, regionCenterTop, regionCenterTop, 
+            regionCenterTop, regionCenterTop, regionCenterTop, regionCenterTop};
         public int currentRegion = 0;
 
         public Map(Navigation nav)
@@ -63,7 +65,7 @@ namespace DrRobot.JaguarControl
 	        // Change hard code here to change map:
             navigation = nav;
 
-            numMapSegments = 243;
+            numMapSegments = 244;
             mapSegmentCorners = new double[numMapSegments, 2, 2];
             slopes = new double[numMapSegments];
             intercepts = new double[numMapSegments];
@@ -939,8 +941,9 @@ mapSegmentCorners[216, 0, 1] = -59.755;
 mapSegmentCorners[216, 1, 0] = -10.62;
 mapSegmentCorners[216, 1, 1] = -59.46;
             #endregion
-            /*
+            
             #region original
+            /*
             //top wall
             mapSegmentCorners[0, 0, 0] = 3.38 + 5.79 + 3.55 / 2;
             mapSegmentCorners[0, 0, 1] = 2.794;
@@ -1062,10 +1065,12 @@ mapSegmentCorners[216, 1, 1] = -59.46;
             mapSegmentCorners[22, 0, 1] = -2.74 - 2.31 - 3.0; //not sure if these 3s are right
             mapSegmentCorners[22, 1, 0] = -5.03 / 2;
             mapSegmentCorners[22, 1, 1] = -2.74 - 2.31 - 3.0;
+             */
             #endregion
             
 
             #region columns
+            /*
             mapSegmentCorners[23, 0, 0] = -10.920000; 
 mapSegmentCorners[23, 0, 1] = -20.230000; 
 mapSegmentCorners[23, 1, 0] = -10.620000; 
@@ -1841,10 +1846,10 @@ mapSegmentCorners[215, 1, 1] = -60.835000;
 mapSegmentCorners[216, 0, 0] = -10.620000; 
 mapSegmentCorners[216, 0, 1] = -60.835000; 
 mapSegmentCorners[216, 1, 0] = -10.620000; 
-mapSegmentCorners[216, 1, 1] = -60.540000; 
+mapSegmentCorners[216, 1, 1] = -60.540000; */
 
             #endregion
-            */
+         
             #region center island
 mapSegmentCorners[217, 0, 0] = -1.6465;
 mapSegmentCorners[217, 0, 1] = -32.37;
@@ -1961,6 +1966,11 @@ mapSegmentCorners[241, 1, 1] = -53.2399;
             mapSegmentCorners[242, 0, 1] = -13.23 - 2.5 - 1.5;
             mapSegmentCorners[242, 1, 0] = 3.55 / 2 + 1 - .25;
             mapSegmentCorners[242, 1, 1] = -13.23 - 2.5 - .25 - 1.5;
+
+            mapSegmentCorners[243, 0, 0] = 1.8587 + 1.23;
+            mapSegmentCorners[243, 0, 1] = -32.37 + 2.8;
+            mapSegmentCorners[243, 1, 0] = 1.8587 + 1.23 + 0.15;
+            mapSegmentCorners[243, 1, 1] = -32.37 + 2.8 + 0.25;
             
             // ****************** Additional Student Code: End   ************
 
