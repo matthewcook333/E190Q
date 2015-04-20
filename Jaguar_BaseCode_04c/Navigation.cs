@@ -277,10 +277,10 @@ namespace DrRobot.JaguarControl
                     }
 
                     // Drive the robot to a desired Point (lab 3)
-                    //FlyToSetPoint();
+                    FlyToSetPoint();
 
                     // Follow the trajectory instead of a desired point (lab 3)
-                    TrackTrajectory();
+                    //TrackTrajectory();
 
                     // Actuate motors based actuateMotorL and actuateMotorR
                     if (jaguarControl.Simulating())
@@ -453,7 +453,7 @@ namespace DrRobot.JaguarControl
             short zeroOutput = 16383;
             short maxPosOutput = 32767;
 
-            double K_u = 140;// 163;// 140;
+            double K_u = 150;// 145;// 163;// 140;
             double T_u = 15;// 29;// 8;
             double K_p = 0.6 /*0.625*/ * K_u;// 25;
             double K_i = 2 * K_p / T_u;// 0.1;
@@ -651,7 +651,7 @@ namespace DrRobot.JaguarControl
             desiredRotRateL = (short)-(desiredVelL / (2 * Math.PI) * pulsesPerRotation);
             desiredRotRateR = (short)(desiredVelR / (2 * Math.PI) * pulsesPerRotation);
 
-            if (Math.Abs(pho) < .1)
+            if (Math.Abs(pho) < 0.3)//.1)
             {
                 withinEpsilon = true;
             }
@@ -659,8 +659,8 @@ namespace DrRobot.JaguarControl
             if (withinEpsilon)
             {
                 double thetaError = AngleDiff(desiredT, t_est);
-                double epsilon = 0.175;
-                short spinSpeed = (short)(/*60*/ 50 + Math.Abs(thetaError) * 25/*15*/ / Math.PI);
+                double epsilon = 0.3;// 0.175;
+                short spinSpeed = (short)(/*60*//*50*/ 70);// + Math.Abs(thetaError) * 25/*15*/ / Math.PI);
 
                 if (thetaError > 0 && Math.Abs(thetaError) > epsilon)
                 {
@@ -700,7 +700,7 @@ namespace DrRobot.JaguarControl
         //private double[] waypoints = { 2, 1, 1, 3, 2, 0, 4, 1, -1, 5, 0, 3.14, 0, 0, 3.14 };
         // for lab 4 test
         //private double[] waypoints = {0.5, -0.5, -1.4, 1, -4, -1, 4, -4.5, 0 };
-        private double[] origwaypoints = {0, -11.25, -0.4, 
+        private double[] origwaypoints = {0, -11.5, -0.4, 
                                           0, -13.5, -1.5, 
                                           0.25, -15.5, -1.6, 
                                           1.75, -17.5, -1.5, 
@@ -718,6 +718,7 @@ namespace DrRobot.JaguarControl
                                           4, -30, 0};
         private double[] waypoints;
         private int currentWaypoint = 0;
+        private Boolean reachedDest = false;
         // THis function is called to follow a trajectory constructed by PRMMotionPlanner()
         private void TrackTrajectory()
         {
@@ -729,19 +730,25 @@ namespace DrRobot.JaguarControl
             double deltaY = desiredY - y_est;
             double deltaT = AngleDiff(desiredT, t_est);
             double distToDest = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
-            Console.WriteLine("current wp: " + currentWaypoint + " deltaT: " + deltaT + " distToDest: " + distToDest + " waypoints length: " + waypoints.Length);
-            if (Math.Abs(deltaT) < 0.34 && distToDest < 0.3/*0.2*/ && currentWaypoint < waypoints.Length - 3)
+            if (distToDest < 0.5)
             {
+                reachedDest = true;
+            }
+            //Console.WriteLine("current wp: " + currentWaypoint + " deltaT: " + deltaT + " distToDest: " + distToDest + " waypoints length: " + waypoints.Length);
+            
+            if (Math.Abs(deltaT) < 0.5 && reachedDest && currentWaypoint < waypoints.Length - 3)
+            {
+                reachedDest = false;
                 currentWaypoint += 3;
                 desiredX = waypoints[currentWaypoint];
                 desiredY = waypoints[currentWaypoint + 1];
                 desiredT = waypoints[currentWaypoint + 2];
-                Console.WriteLine("going to X: " + desiredX + " Y: " + desiredY + " T: " + desiredT);
+                Console.WriteLine("currentwp: " + currentWaypoint + " going to X: " + desiredX + " Y: " + desiredY + " T: " + desiredT);
                 if (map.currentRegion < map.regions.Length-1)
                 {
                     ++map.currentRegion;
                 }
-                Thread.Sleep(2000);
+                //Thread.Sleep(2000);
             }
             FlyToSetPoint();
             

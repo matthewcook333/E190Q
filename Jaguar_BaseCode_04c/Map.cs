@@ -28,26 +28,26 @@ namespace DrRobot.JaguarControl
         //public static int[] region1 = new[]{ 8, 9, 10, 18, 19, 20, 21, 22, 242};
         public static int[] region1 = new[] {4, 5, 6, 7, 8, 15, 19, 20 };
         //public static int[] region2 = new[]{ 8, 9, 18, 19, /*16, 17,*/ 20, 21, 242};
-        public static int[] region2 = new[] { 4, 5, 6, 7, 8, 15, 19, 20, 242 };
+        public static int[] region2 = new[] { 4, 5, 6, 7, 8, 15, 19, 20/*, 242*/ };
         //public static int[] region3 = new[]{ 16, 17, 18, 19,
         //    39, /*40,*/ 41, 42, /*43, 44, 45, 46,*/ 47, 48, 49, 50, 51, 52, 53, 54,
         //    55, 56, 57, 58, 59, 60, 61, 62/*, 63, 64, 65, 66, 67, 68, 69, 70*/, 242};
         public static int[] region3 = new[]{ 8, 9, 19, 16,
             39, /*40,*/ 41, 42, /*43, 44, 45, 46,*/ 47, 48, 49, 50, 51, 52, 53, 54,
-            55, 56, 57, 58, 59, 60, 61, 62/*, 63, 64, 65, 66, 67, 68, 69, 70*/, 242};
+            55, 56, 57, 58, 59, 60, 61, 62/*, 63, 64, 65, 66, 67, 68, 69, 70*//*, 242*/};
         //public static int[] regionTopColumns = new[] {16, 17, 18, 19,
         //     39, /*40,*/ 41, 42,
         //    47, 48, /*49,*/ 50, 55, 56, /*57,*/ 58, 242};
         public static int[] regionTopColumns = new[] { 8, 9, 19, 16,
              39, /*40,*/ 41, 42,
-            47, 48, /*49,*/ 50, 55, 56, /*57,*/ 58, 242};
+            47, 48, /*49,*/ 50, 55, 56, /*57,*/ 58, /*242*/};
         public static int[] region4 = new[] {51, /*52,*/ 53, 54, 59, 60, 61, /*62,*/
-            217, 221, 226, 227, 240, 241, 243};
-        public static int[] regionCenterTop = new[] {217, 221, 226, 227, 240, 241, 243 };
-        public static int[] region5 = new[] {217, 218, 221, 224, 225, 226, 227, 240, 241, 243};
+            217, 221, 226, 227, 240, 241, /*243*/};
+        public static int[] regionCenterTop = new[] {217, 221, 226, 227, 240, 241, /*243*/ };
+        public static int[] regionCenter = new[] {217, 218, 219, 223, 224, 225, 226, 230, 231, 232, 233, 234, 237, 238, 239, 240, 241, /*243*/};
  
 
-        public int[][] regions = new[] {region1, region1, region2, regionTopColumns, 
+        public int[][] regions = new[] {regionCenter, region1, region1, region2, regionTopColumns, 
             regionTopColumns, region3, region3, region4, 
             region4, region4, regionCenterTop, regionCenterTop, 
             regionCenterTop, regionCenterTop, regionCenterTop, regionCenterTop};
