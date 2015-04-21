@@ -52,7 +52,7 @@ namespace DrRobot.JaguarControl
         public double robotRadius = 0.242;//0.232
         private double angleTravelled, distanceTravelled;
         private double diffEncoderPulseL, diffEncoderPulseR;
-        private double maxVelocity = 0.21;//0.23;//0.21;//0.25;
+        private double maxVelocity = 0.21;//0.21;//0.23;//0.21;//0.25;
         private double Kpho = 1;
         private double Kalpha = 8;//4;//4;//8
         private double Kbeta = -0.5;//-0.5//-1.0;
@@ -146,8 +146,9 @@ namespace DrRobot.JaguarControl
         // This is called every time the reset button is pressed
         public void Initialize()
         {
-            initialX = map.xOffset - 3;
-            initialY = map.yOffset - 11;// 9.5;
+            initialX = map.xOffset + 3;
+            initialY = map.yOffset - 4;// -11;
+            initialT = -3.14;
 
             map.currentRegion = 0;
             currentWaypoint = 0;
@@ -277,10 +278,10 @@ namespace DrRobot.JaguarControl
                     }
 
                     // Drive the robot to a desired Point (lab 3)
-                    FlyToSetPoint();
+                    //FlyToSetPoint();
 
                     // Follow the trajectory instead of a desired point (lab 3)
-                    //TrackTrajectory();
+                    TrackTrajectory();
 
                     // Actuate motors based actuateMotorL and actuateMotorR
                     if (jaguarControl.Simulating())
@@ -651,7 +652,7 @@ namespace DrRobot.JaguarControl
             desiredRotRateL = (short)-(desiredVelL / (2 * Math.PI) * pulsesPerRotation);
             desiredRotRateR = (short)(desiredVelR / (2 * Math.PI) * pulsesPerRotation);
 
-            if (Math.Abs(pho) < 0.3)//.1)
+            if (Math.Abs(pho) < 0.5)//.1)
             {
                 withinEpsilon = true;
             }
@@ -659,8 +660,8 @@ namespace DrRobot.JaguarControl
             if (withinEpsilon)
             {
                 double thetaError = AngleDiff(desiredT, t_est);
-                double epsilon = 0.3;// 0.175;
-                short spinSpeed = (short)(/*60*//*50*/ 70);// + Math.Abs(thetaError) * 25/*15*/ / Math.PI);
+                double epsilon = 0.2;// 0.175;
+                short spinSpeed = (short)(/*60*//*50*/ 37 + Math.Abs(thetaError) * 20/*15*/ / Math.PI);
 
                 if (thetaError > 0 && Math.Abs(thetaError) > epsilon)
                 {
@@ -700,22 +701,36 @@ namespace DrRobot.JaguarControl
         //private double[] waypoints = { 2, 1, 1, 3, 2, 0, 4, 1, -1, 5, 0, 3.14, 0, 0, 3.14 };
         // for lab 4 test
         //private double[] waypoints = {0.5, -0.5, -1.4, 1, -4, -1, 4, -4.5, 0 };
-        private double[] origwaypoints = {0, -11.5, -0.4, 
+        private double[] origwaypoints = {0, -4, -3.14, //regionStart
+                                          -3.75, -4, -3.14, //regionStart
+                                          -3.75, -4, -1.57, //regionStart2
+                                          -3.75, -11.5, -1.57, //regionStart2
+                                          -3.75, -11.5, 0, //region1
+                                          0, -11.5, -0.4, 
                                           0, -13.5, -1.5, 
                                           0.25, -15.5, -1.6, 
                                           1.75, -17.5, -1.5, 
-                                          1.75, -19.5, -1.5, 
+                                          1.75, -19.5, -1.5, // waypoint 10 for counting
                                           1.75, -21.5, -1.5, 
                                           2, -23.5, -1.7,
-                                          1.5, -26.5, -1.8,
-                                          1, -28, -1.8, 
-                                          0.5, -30, -1.57,
-                                          0.5, -32, -1.57, 
-                                          0.5, -34, -1.57,
-                                          0.5, -34, 1.57, 
-                                          0.5, -30, 1.57, 
-                                          0.5, -30, 0, 
-                                          4, -30, 0};
+                                          3, -27.5, -1.57,
+                                          4, -31, -3.14, // wp3
+                                          0.5, -31, -3.14,
+                                          0.5, -31.5, -1.57,
+                                          0.5, -33, -1.57,
+                                          0.5, -35, -1.57, //wp4
+                                          -1, -41, -1.57, // midpoint veering right
+                                          0.5, -48.5, -1.57, //wp5
+                                          0.5, -48.5, 1.57, //turn around
+                                          0.5, -44.5, 1.57, //get out
+                                          0.5, -44.5, 0,
+                                          6, -44.5, 0,
+                                          11, -41, 0,
+                                          13, -41, 0, //wp center right 6th milestone
+                                          16.5, -41, 0,
+                                          16.5, -41, 1.57, //turn up
+                                          16.5, -39, 1.57
+                                          };
         private double[] waypoints;
         private int currentWaypoint = 0;
         private Boolean reachedDest = false;
@@ -730,7 +745,7 @@ namespace DrRobot.JaguarControl
             double deltaY = desiredY - y_est;
             double deltaT = AngleDiff(desiredT, t_est);
             double distToDest = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
-            if (distToDest < 0.5)
+            if (distToDest < 0.6)
             {
                 reachedDest = true;
             }

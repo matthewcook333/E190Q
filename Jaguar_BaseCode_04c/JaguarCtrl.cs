@@ -305,7 +305,9 @@ namespace DrRobot.JaguarControl
                         (float)(xCenter + mapResolution * navigation.map.mapSegmentCorners[w, 1, 0]),
                         (float)(yCenter - mapResolution * navigation.map.mapSegmentCorners[w, 1, 1]));
 
-                }*/
+                }
+                */
+                
                 int[] region = navigation.map.regions[navigation.map.currentRegion];
                 for (int w = 0; w < region.Length; w++)
                 {
@@ -316,7 +318,7 @@ namespace DrRobot.JaguarControl
                         (float)(yCenter - mapResolution * navigation.map.mapSegmentCorners[region[w], 1, 1]));
 
                 }
-
+                
                 // Draw Particles
             
                 int partSize = (int)(0.16*mapResolution);

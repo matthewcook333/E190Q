@@ -32,14 +32,14 @@ namespace DrRobot.JaguarControl
 	        // Change hard code here to change map:
 
             // count number of lines in CSV file
-            numMapSegments = File.ReadAllLines(@"C:\Users\mattcook\Desktop\extended_map3.csv").Length;
+            numMapSegments = File.ReadAllLines(@"C:\Users\mattcook\Desktop\extended_map3b.csv").Length;
             mapSegmentCorners = new double[numMapSegments, 2, 2];
             segmentSizes = new double[numMapSegments];
             slopes = new double[numMapSegments];
             intercepts = new double[numMapSegments];
 
             // open CSV file
-            var reader = new StreamReader(File.OpenRead(@"C:\Users\mattcook\Desktop\extended_map3.csv"));
+            var reader = new StreamReader(File.OpenRead(@"C:\Users\mattcook\Desktop\extended_map3b.csv"));
             int r = 0;
             // read line by line
             while (!reader.EndOfStream)
@@ -50,7 +50,7 @@ namespace DrRobot.JaguarControl
                 mapSegmentCorners[r, 0, 1] = Convert.ToDouble(values[1]);
                 mapSegmentCorners[r, 1, 0] = Convert.ToDouble(values[2]);
                 mapSegmentCorners[r, 1, 1] = Convert.ToDouble(values[3]);
-                if (r >= 0 && r < 217)
+                if (r >= 0 && r < numMapSegments)
                 {
                     Console.WriteLine("mapSegmentCorners[" + r + ", 0, 0] = " + mapSegmentCorners[r, 0, 0]);
                     Console.WriteLine("mapSegmentCorners[" + r + ", 0, 1] = " + mapSegmentCorners[r, 0, 1]);
