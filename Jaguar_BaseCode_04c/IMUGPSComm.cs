@@ -73,6 +73,7 @@ namespace DrRobot.JaguarControl
             public double eRoll;
             public double ePitch;
             public double eYaw;
+            public double heading;
         }
 
         public IMURecord imuRecord = new IMURecord();
@@ -132,6 +133,11 @@ namespace DrRobot.JaguarControl
             return imuRecord.accel_z;
         }
 
+        public double getHeading()
+        {
+            return imuRecord.heading;
+        }
+
         private void startComm()
         {
             int remotePortGPS = jaguarSetting.GPSPort;
@@ -169,8 +175,11 @@ namespace DrRobot.JaguarControl
             try
             {
                 clientSocketIMU = new TcpClient();
-                IAsyncResult result = clientSocketIMU.BeginConnect(IPAddr, remotePort, null, null);
-                bool success = result.AsyncWaitHandle.WaitOne(500, true);
+                clientSocketIMU.Connect(IPAddr, remotePort);
+                bool success = true;
+                // clientSocketIMU = new TcpClient();
+                //IAsyncResult result = clientSocketIMU.BeginConnect(IPAddr, remotePort, null, null);
+                //bool success = result.AsyncWaitHandle.WaitOne(500, true);
                 if (!success)
                 {
                     receivingIMU = false;
@@ -184,8 +193,9 @@ namespace DrRobot.JaguarControl
                     threadClientIMU.Start();
                 }
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine("{0} Exception caught.", e);
                 receivingIMU = false;
             }
 
@@ -306,7 +316,7 @@ namespace DrRobot.JaguarControl
         {
             string[] data = msg.Split(',');
             
-            if (data.Length == 10) //the whole package here
+            if (data.Length == 11) //the whole package here
             {
                 Invoke(new updateSensorDataInfo(updateSensor), msg);
                 
@@ -327,8 +337,9 @@ namespace DrRobot.JaguarControl
                 imuRecord.index = seqNo;
                 imuRecord.magn_x = double.Parse(data[7]);
                 imuRecord.magn_y = double.Parse(data[8]);
-                data[9] = data[9].Remove(data[9].Length - 1, 1);
                 imuRecord.magn_z = double.Parse(data[9]);
+                data[10] = data[10].Remove(data[10].Length - 1, 1);
+                imuRecord.heading = double.Parse(data[10]);
                 
                 //for drawing
                 draw_AccelX[drawEndPoint] = accel_x - accel_x_offset;

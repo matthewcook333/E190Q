@@ -252,7 +252,7 @@ namespace DrRobot.JaguarControl
                 MotionPrediction();
 
                 // Update the global state of the robot - x,y,t (lab 2)
-                LocalizeRealWithOdometry();
+                LocalizeRealWithOdometryAndCompass();
 
                 // Update the global state of the robot - x,y,t (lab 2)
                 //LocalizeRealWithIMU();
@@ -823,7 +823,7 @@ namespace DrRobot.JaguarControl
         // This function will Localize the robot, i.e. set the robot position
         // defined by x,y,t using the last position with angleTravelled and
         // distance travelled.
-        public void LocalizeRealWithOdometry()
+        public void LocalizeRealWithOdometryAndCompass()
         {
             // ****************** Additional Student Code: Start ************
 
@@ -834,8 +834,9 @@ namespace DrRobot.JaguarControl
             // Update the actual
             x += distanceTravelled * Math.Cos(t + (angleTravelled / 2));
             y += distanceTravelled * Math.Sin(t + (angleTravelled / 2));
-            t += angleTravelled;
-            // Make sure t stays between pi and -pi
+            t = -(jaguarControl.getHeading()+270) * Math.PI/180; // offset added to correct north to 0.
+             // Keep angle of robot within -pi and pi
+            t = t % (2 * Math.PI);
             if (t > Math.PI)
             {
                 t -= 2 * Math.PI;
