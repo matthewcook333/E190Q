@@ -297,7 +297,7 @@ namespace DrRobot.JaguarControl
                 g.FillEllipse(Brushes.LightGray, X_laser, Y_laser, laserDiameter, laserDiameter);
 
                 // Draw Walls
-                
+                /*
                 for (int w = 0; w < navigation.map.numMapSegments; w++)
                 {
                     g.DrawLine(wallPen, (float)(xCenter + mapResolution * navigation.map.mapSegmentCorners[w, 0, 0]), 
@@ -305,7 +305,7 @@ namespace DrRobot.JaguarControl
                         (float)(xCenter + mapResolution * navigation.map.mapSegmentCorners[w, 1, 0]),
                         (float)(yCenter - mapResolution * navigation.map.mapSegmentCorners[w, 1, 1]));
 
-                }
+                }*/
                 
                 
                 int[] region = navigation.map.regions[navigation.map.currentRegion];
