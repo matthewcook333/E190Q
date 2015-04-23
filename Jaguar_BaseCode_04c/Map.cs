@@ -19,7 +19,7 @@ namespace DrRobot.JaguarControl
         private double maxWorkspaceX =  10;
         private double minWorkspaceY = -10;
         private double maxWorkspaceY =  10;
-        public double yOffset = 20;//40;//30;
+        public double yOffset = 25;//40;//30;
         public double xOffset = -10;
 
         public double colOffset = 0.23;
@@ -49,28 +49,28 @@ namespace DrRobot.JaguarControl
         public static int[] regionRightColumns5 = new[] { 222, 227, 85, 93, 99, 100, 101, 103, 104, 105, 107, 111 };
         public static int[] regionRightColumns6 = new[] { 227, 85, 86, 92, 93, 100, 101, 99, 103, 104, 111 };
         public static int[] regionRightColumns7 = new[] { 227, 85, 86, 89, 92, 93, 94, 100, 99, 100, 111, 254,};
-        public static int[] regionRightColumns8 = new[] { 81, 82, 83, 86, 89, 90, 91, 94, 100, 111, 254, 253, 251, 249};
-        public static int[] regionTrashCan = new[] { 82, 89, 90, 111, 242, 246, 249, 251, 253, 254};
-        public static int[] regionParsons = new[] { 82, 87, 90, 111, 242, 243, 244, 245, 246, 247, 248, 249, 251, 252, 253 };
-        public static int[] regionParsonsRight = new[] { 89, 90, 91, 94, 251, 111, 242, 243, 244, 245, 246, 248, 249, 250, 253, 254, 255 };
+        public static int[] regionRightColumns8 = new[] { 81, 82, 83, 86, 89, 90, 91, 94, 100, 111, 242, 246, 254, 253, 251, 249/*, 256*/};
+        public static int[] regionTrashCan = new[] { 82, 86, 89, 90, 111, 242, 243, 244, 245, 246, 248, 249, 251, 253, 254/*, 256*/};
+        public static int[] regionParsons = new[] { 82, 86, 87, 90, 111, 242, 243, 244, 245, 246, 247, 248, 249, 251, 252, 253/*, 256*/};
+        public static int[] regionParsonsRight = new[] {86, 89, 90, 91, 94, 251, 111, 242, 243, 244, 245, 246, 248, 249, 250, 253, 254, 255/*, 256*/};
+        public static int[] regionParsonsTurn = new[] { 82, 86, 87, 90, 242, 243, 244, 245, 246, 247, 248, 251, 252, 253 };
+        public static int[] regionParsonsLeave = new[] { 82, 86, 87, 89, 90, 95, 98, 111, 242, 243, 244, 245, 246, 247, 248, 249, 251, 252, 253, 254/*, 256*/ };
         public static int[] regionSprint = new[] {251, 246 };
-        public static int[] regionParsonsTurn = new[] { 82, 87, 90, 242, 243, 244, 245, 246, 247, 248, 251, 252, 253 };
-        public static int[] regionParsonsLeave = new[] { 82, 87, 89, 90, 95, 98, 111, 242, 243, 244, 245, 246, 247, 248, 249, 251, 252, 253, 254 };
+    
 
 
 
 
 
-
-        public int[][] regions = new[] { regionStart, regionStart, regionStart2, regionStart2, region1,
+        public int[][] regions = new[] {/*regionStart, regionStart, regionStart2, regionStart2, region1,
             region1, region1, region2, regionTopColumns, regionTopColumns, 
             region3, region3, region4, region4LessColumns, region4LessColumns, 
             regionCenterTop, regionCenterTop, regionCenterTop, regionCenterLeft, regionCenterLeft, 
-            regionCenterLeft, regionCenterLeft, regionCenterLeft, regionCenterRight, regionCenterRight, 
+            regionCenterLeft, regionCenterLeft, regionCenterLeft, regionCenterRight, regionCenterRight,*/
             regionCenterRight, regionRightColumns, regionRightColumns, regionRightColumns2, regionRightColumns3, 
             regionRightColumns4, regionRightColumns5, regionRightColumns6, regionRightColumns7, regionRightColumns8,
             regionTrashCan, regionParsons, regionParsonsTurn, regionParsonsLeave, regionParsonsLeave, regionParsonsRight,
-            regionSprint, regionSprint, regionSprint};
+            regionSprint, regionSprint, regionSprint, regionSprint, regionSprint, regionSprint};
         public int currentRegion = 0;
 
         public Map(Navigation nav)
@@ -85,7 +85,7 @@ namespace DrRobot.JaguarControl
 	        // Change hard code here to change map:
             navigation = nav;
 
-            numMapSegments = 256;
+            numMapSegments = 257;
             mapSegmentCorners = new double[numMapSegments, 2, 2];
             slopes = new double[numMapSegments];
             intercepts = new double[numMapSegments];
@@ -2983,27 +2983,27 @@ mapSegmentCorners[241, 1, 1] = -53.2399;
             mapSegmentCorners[246, 1, 1] = mapSegmentCorners[17, 1, 1];
 
             // trash can top
-            mapSegmentCorners[247, 0, 0] = mapSegmentCorners[246, 0, 0] + 0.2;
+            mapSegmentCorners[247, 0, 0] = mapSegmentCorners[246, 0, 0] + 0.2 + 0.15;
             mapSegmentCorners[247, 0, 1] = mapSegmentCorners[246, 1, 1] - 1.1176;
-            mapSegmentCorners[247, 1, 0] = mapSegmentCorners[246, 0, 0] + 0.2 + 0.635;
+            mapSegmentCorners[247, 1, 0] = mapSegmentCorners[246, 0, 0] + 0.2 + 0.635 + 0.15;
             mapSegmentCorners[247, 1, 1] = mapSegmentCorners[246, 1, 1] - 1.1176;
 
             // trash can left
-            mapSegmentCorners[248, 0, 0] = mapSegmentCorners[246, 0, 0] + 0.2;
+            mapSegmentCorners[248, 0, 0] = mapSegmentCorners[246, 0, 0] + 0.2 +0.15;
             mapSegmentCorners[248, 0, 1] = mapSegmentCorners[246, 1, 1] - 1.1176;
-            mapSegmentCorners[248, 1, 0] = mapSegmentCorners[246, 0, 0] + 0.2;
+            mapSegmentCorners[248, 1, 0] = mapSegmentCorners[246, 0, 0] + 0.2 + 0.15;
             mapSegmentCorners[248, 1, 1] = mapSegmentCorners[246, 1, 1] - 1.1176 - 0.635;
 
             // trash can bottom
-            mapSegmentCorners[249, 0, 0] = mapSegmentCorners[246, 0, 0] + 0.2;
+            mapSegmentCorners[249, 0, 0] = mapSegmentCorners[246, 0, 0] + 0.2 + 0.15;
             mapSegmentCorners[249, 0, 1] = mapSegmentCorners[246, 1, 1] - 1.1176 - 0.635;
-            mapSegmentCorners[249, 1, 0] = mapSegmentCorners[246, 0, 0] + 0.2 + 0.635;
+            mapSegmentCorners[249, 1, 0] = mapSegmentCorners[246, 0, 0] + 0.2 + 0.635 + 0.15;
             mapSegmentCorners[249, 1, 1] = mapSegmentCorners[246, 1, 1] - 1.1176 - 0.635;
 
             // trash can right
-            mapSegmentCorners[250, 0, 0] = mapSegmentCorners[246, 0, 0] + 0.2 + 0.635;
+            mapSegmentCorners[250, 0, 0] = mapSegmentCorners[246, 0, 0] + 0.2 + 0.635 + 0.15;
             mapSegmentCorners[250, 0, 1] = mapSegmentCorners[246, 1, 1] - 1.1176;
-            mapSegmentCorners[250, 1, 0] = mapSegmentCorners[246, 0, 0] + 0.2 + 0.635;
+            mapSegmentCorners[250, 1, 0] = mapSegmentCorners[246, 0, 0] + 0.2 + 0.635 + 0.15;
             mapSegmentCorners[250, 1, 1] = mapSegmentCorners[246, 1, 1] - 1.1176 - 0.635;
 
             // super long far right horiz
@@ -3013,29 +3013,37 @@ mapSegmentCorners[241, 1, 1] = -53.2399;
             mapSegmentCorners[251, 1, 1] = mapSegmentCorners[111, 0, 1];
 
 
+
             // last column 
-            #region MyRegion
-            mapSegmentCorners[252, 0, 0] = mapSegmentCorners[87, 0, 0] + 3.35;
-            mapSegmentCorners[252, 0, 1] = mapSegmentCorners[87, 0, 1];
-            mapSegmentCorners[252, 1, 0] = mapSegmentCorners[87, 1, 0] + 3.35;
-            mapSegmentCorners[252, 1, 1] = mapSegmentCorners[87, 1, 1];
+            #region last col
+            // top
+            mapSegmentCorners[252, 0, 0] = mapSegmentCorners[251, 0, 0];// mapSegmentCorners[87, 0, 0] + 3.35;
+            mapSegmentCorners[252, 0, 1] = mapSegmentCorners[251, 0, 1] + 0.3 + 3.05; // mapSegmentCorners[87, 0, 1];
+            mapSegmentCorners[252, 1, 0] = mapSegmentCorners[251, 0, 0] + 0.3; // mapSegmentCorners[87, 1, 0] + 3.35;
+            mapSegmentCorners[252, 1, 1] = mapSegmentCorners[251, 0, 1] + 0.3 + 3.05; // mapSegmentCorners[87, 1, 1];
             //left
-            mapSegmentCorners[253, 0, 0] = mapSegmentCorners[88, 0, 0] + 3.35;
-            mapSegmentCorners[253, 0, 1] = mapSegmentCorners[88, 0, 1];
-            mapSegmentCorners[253, 1, 0] = mapSegmentCorners[88, 1, 0] + 3.35;
-            mapSegmentCorners[253, 1, 1] = mapSegmentCorners[88, 1, 1];
+            mapSegmentCorners[253, 0, 0] = mapSegmentCorners[252, 0, 0]; // mapSegmentCorners[88, 0, 0] + 3.35;
+            mapSegmentCorners[253, 0, 1] = mapSegmentCorners[252, 0, 1]; //mapSegmentCorners[88, 0, 1];
+            mapSegmentCorners[253, 1, 0] = mapSegmentCorners[252, 0, 0]; //mapSegmentCorners[88, 1, 0] + 3.35;
+            mapSegmentCorners[253, 1, 1] = mapSegmentCorners[252, 0, 1] - 0.3; //mapSegmentCorners[88, 1, 1];
             // bottom
-            mapSegmentCorners[254, 0, 0] = mapSegmentCorners[89, 0, 0] + 3.35;
-            mapSegmentCorners[254, 0, 1] = mapSegmentCorners[89, 0, 1];
-            mapSegmentCorners[254, 1, 0] = mapSegmentCorners[89, 1, 0] + 3.35;
-            mapSegmentCorners[254, 1, 1] = mapSegmentCorners[89, 1, 1];
+            mapSegmentCorners[254, 0, 0] = mapSegmentCorners[252, 0, 0]; //mapSegmentCorners[89, 0, 0] + 3.35;
+            mapSegmentCorners[254, 0, 1] = mapSegmentCorners[252, 0, 1] - 0.3; //mapSegmentCorners[89, 0, 1];
+            mapSegmentCorners[254, 1, 0] = mapSegmentCorners[252, 1, 0]; //mapSegmentCorners[89, 1, 0] + 3.35;
+            mapSegmentCorners[254, 1, 1] = mapSegmentCorners[252, 1, 1] - 0.3; //mapSegmentCorners[89, 1, 1];
             //right part
-            mapSegmentCorners[255, 0, 0] = mapSegmentCorners[90, 0, 0] + 3.35;
-            mapSegmentCorners[255, 0, 1] = mapSegmentCorners[90, 0, 1];
-            mapSegmentCorners[255, 1, 0] = mapSegmentCorners[90, 1, 0] + 3.35;
-            mapSegmentCorners[255, 1, 1] = mapSegmentCorners[90, 1, 1];
+            mapSegmentCorners[255, 0, 0] = mapSegmentCorners[252, 1, 0]; // mapSegmentCorners[90, 0, 0] + 3.35;
+            mapSegmentCorners[255, 0, 1] = mapSegmentCorners[252, 0, 1]; //mapSegmentCorners[90, 0, 1];
+            mapSegmentCorners[255, 1, 0] = mapSegmentCorners[252, 1, 0]; //mapSegmentCorners[90, 1, 0] + 3.35;
+            mapSegmentCorners[255, 1, 1] = mapSegmentCorners[252, 0, 1] - 0.3; //mapSegmentCorners[90, 1, 1];
             #endregion
-            
+
+            // Parsons box
+            mapSegmentCorners[256, 0, 0] = mapSegmentCorners[251, 0, 0] - 3.4;
+            mapSegmentCorners[256, 0, 1] = mapSegmentCorners[251, 0, 1] + 1.35;
+            mapSegmentCorners[256, 1, 0] = mapSegmentCorners[251, 0, 0]  - 3.3;
+            mapSegmentCorners[256, 1, 1] = mapSegmentCorners[251, 0, 1] + 1.75;
+
             // ****************** Additional Student Code: End   ************
 
 

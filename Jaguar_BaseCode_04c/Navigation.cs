@@ -52,7 +52,7 @@ namespace DrRobot.JaguarControl
         public double robotRadius = 0.242;//0.232
         private double angleTravelled, distanceTravelled;
         private double diffEncoderPulseL, diffEncoderPulseR;
-        private double maxVelocity = 0.21;//0.21;//0.23;//0.21;//0.25;
+        private double maxVelocity = 0.23;//0.21;//0.21;//0.23;//0.21;//0.25;
         private double Kpho = 1;
         private double Kalpha = 8;//4;//4;//8
         private double Kbeta = -0.5;//-0.5//-1.0;
@@ -146,9 +146,9 @@ namespace DrRobot.JaguarControl
         // This is called every time the reset button is pressed
         public void Initialize()
         {
-            initialX = map.xOffset + 3;// 11;
-            initialY = map.yOffset - 4; //41;
-            initialT = -3.14;// 0
+            initialX = map.xOffset + 11;// 3;// 11;
+            initialY = map.yOffset - 41;// 4; //41;
+            initialT = 0;// -3.14;// 0
 
             map.currentRegion = 0;
             currentWaypoint = 0;
@@ -661,7 +661,7 @@ namespace DrRobot.JaguarControl
             {
                 double thetaError = AngleDiff(desiredT, t_est);
                 double epsilon = 0.2;// 0.175;
-                short spinSpeed = (short)(/*60*//*50*/ /*37*/ 47 + Math.Abs(thetaError) * 20/*15*/ / Math.PI);
+                short spinSpeed = (short)(/*60*//*50*/ /*37*/ 60 + Math.Abs(thetaError) * 20/*15*/ / Math.PI);
 
                 if (thetaError > 0 && Math.Abs(thetaError) > epsilon)
                 {
@@ -701,51 +701,55 @@ namespace DrRobot.JaguarControl
         //private double[] waypoints = { 2, 1, 1, 3, 2, 0, 4, 1, -1, 5, 0, 3.14, 0, 0, 3.14 };
         // for lab 4 test
         //private double[] waypoints = {0.5, -0.5, -1.4, 1, -4, -1, 4, -4.5, 0 };
-        private double[] origwaypoints = {0, -4, -3.14, //regionStart
-                                          -3.9, -4, -3.14, //regionStart
-                                          -3.9, -4, -1.57, //regionStart2
-                                          -3.9, -11.5, -1.57, //regionStart2
-                                          -3.9, -11.5, 0, //region1
-                                          0, -11.5, -0.4, 
-                                          0, -13.5, -1.5, 
-                                          0.25, -15.5, -1.6, 
-                                          1.75, -17.5, -1.5, 
-                                          1.75, -19.5, -1.5, // waypoint 10 for counting
-                                          1.75, -21.5, -1.5, 
-                                          2, -23.5, -1.7,
-                                          3, -27.5, -1.57,
-                                          4, -31, -3.14, // wp3
-                                          0.5, -31, -3.14,
-                                          0.5, -31.5, -1.57,
-                                          0.5, -33, -1.57,
-                                          0.5, -35, -1.57, //wp4
-                                          -1, -41, -1.57, // midpoint veering right
-                                          0.5, -48.5, -1.57, //wp5
-                                          0.5, -48.5, 1.57, //turn around
-                                          0.5, -44.5, 1.57, //get out
-                                          0.5, -44.5, 0,
-                                          6, -44.5, 0,
-                                          11, -41, 0, // 25 for counting. Comment out here for partway
-                                          13, -41, 0, //wp center right 6th milestone
-                                          16.5, -41, 0,
-                                          16.5, -41, 1.57, //turn up
-                                          16.5, -39, 1.57,
-                                          16.5, -35, 1.57, // 30 for counting
-                                          16.5, -32, 1.57,
-                                          16.5, -30, 1.57, 
-                                          16.5, -28, 1.57, //final location outside of columns
-                                          20, -27, 1.57,
-                                          20, -24, 1.57,
-                                          20, -21, 1.57, // before waypoint
-                                          20, -19.25, 1.57, // AT REGION 7
-                                          20, -19.25, -1.57, // turn around
-                                          20, -24.5, -1.57, //backing out 
-                                          20, -24.5, 0, //turn right dir
-                                          23, -24.5, 0, //get out of area
-                                          38, -24.5, 0, // SPRINT
-                                          38, -24.5, 1.57, // TURN UP!
-                                          38, -14.88, 1.57 //MADE IT
-                                         };
+        private double[] origwaypoints = {
+        /*0, -4, -3.14, //regionStart
+        -3.9, -4, -3.14, //regionStart
+        -3.9, -4, -1.57, //regionStart2
+        -3.9, -11.5, -1.57, //regionStart2
+        -3.9, -11.5, 0, //region1
+        0, -11.5, -0.4, 
+        0, -13.5, -1.5, 
+        0.25, -15.5, -1.6, 
+        1.75, -17.5, -1.5, 
+        1.75, -19.5, -1.5, // waypoint 10 for counting
+        1.75, -21.5, -1.5, 
+        2, -23.5, -1.7,
+        3, -27.5, -1.57,
+        4, -31, -3.14, // wp3
+        0.5, -31, -2.7,
+        0.5, -31.5, -1.57,
+        0.5, -33, -1.57,
+        0.5, -35, -1.57, //wp4
+        -1, -41, -1.57, // midpoint veering right
+        0.5, -48.5, -1.57, //wp5
+        0.5, -48.5, 1.57, //turn around
+        0.5, -44.5, 1.57, //get out
+        0.5, -44.5, 0,
+        6, -44.5, 0,
+        11, -41, 0, */// 25 for counting. Comment out here for partway
+        13, -41, 0, //wp center right 6th milestone
+        16.5, -41, 0,
+        16.5, -41, 1.57, //turn up
+        16.5, -39, 1.57,
+        16.5, -35, 1.57, // 30 for counting
+        16.5, -32, 1.57,
+        16.5, -30, 1.57, 
+        16.5, -28, 1.57, //final location outside of columns
+        21.5, -27, 1.57,
+        21.5, -24, 1.57,
+        20, -21, 1.57, // before waypoint
+        20, -19.25, 1.57, // AT REGION 7
+        20, -19.25, -1.57, // turn around
+        20, -24.5, -1.57, //backing out 
+        20, -24.5, 0, //turn right dir
+        23, -24.5, 0, //get out of area
+        26, -24.5, 0,
+        30, -24.5, 0, //intermediate sprint
+        34, -24.5, 0,
+        40, -24.5, 0, // SPRINT
+        40, -24.5, 1.57, // TURN UP!
+        40, -14.88, 1.57 //MADE IT
+        };
         private double[] waypoints;
         private int currentWaypoint = 0;
         private Boolean reachedDest = false;
@@ -815,11 +819,11 @@ namespace DrRobot.JaguarControl
             diffEncoderPulseL = currentEncoderPulseL - lastEncoderPulseL;
             diffEncoderPulseR = -(currentEncoderPulseR - lastEncoderPulseR);
             // check for rollover
-            if (Math.Abs(diffEncoderPulseL) > 20 * pulsesPerRotation)
+            if (Math.Abs(diffEncoderPulseL) > 75 * pulsesPerRotation)
             {
                 diffEncoderPulseL = diffEncoderPulseL < 0 ? diffEncoderPulseL + encoderMax : encoderMax - diffEncoderPulseL;
             }
-            if (Math.Abs(diffEncoderPulseR) > 20 * pulsesPerRotation)
+            if (Math.Abs(diffEncoderPulseR) > 75 * pulsesPerRotation)
             {
                 diffEncoderPulseR = diffEncoderPulseR < 0 ? diffEncoderPulseR + encoderMax : encoderMax - diffEncoderPulseR;
             }
@@ -907,11 +911,11 @@ namespace DrRobot.JaguarControl
                 double tempDiffR = PFEncoderDiffR;
 
                 // check for rollover
-                if (Math.Abs(PFEncoderDiffL) > 20 * pulsesPerRotation)
+                if (Math.Abs(PFEncoderDiffL) > 75 * pulsesPerRotation)
                 {
                     PFEncoderDiffL = PFEncoderDiffL < 0 ? PFEncoderDiffL + encoderMax : encoderMax - PFEncoderDiffL;
                 }
-                if (Math.Abs(PFEncoderDiffR) > 20 * pulsesPerRotation)
+                if (Math.Abs(PFEncoderDiffR) > 75 * pulsesPerRotation)
                 {
                     PFEncoderDiffR = PFEncoderDiffR < 0 ? PFEncoderDiffR + encoderMax : encoderMax - PFEncoderDiffR;
                 }
@@ -923,20 +927,12 @@ namespace DrRobot.JaguarControl
                 //double PFDistanceR = GaussianDist(wheelDistanceR, wheelDistanceR * 0.2);
                 //double PFDistanceL = GaussianDist(wheelDistanceL, wheelDistanceL * 0.2);
                 
-                PFDistanceL = GaussianDist(PFDistanceL, PFDistanceL * 0.15);//0.10);//0.2);
-                PFDistanceR = GaussianDist(PFDistanceR, PFDistanceR * 0.15);//0.10);//0.2);
+                PFDistanceL = GaussianDist(PFDistanceL, PFDistanceL * 0.25);//0.15);//0.10);//0.2);
+                PFDistanceR = GaussianDist(PFDistanceR, PFDistanceR * 0.25);//0.15);//0.10);//0.2);
 
                 double estAngleTravelled = (PFDistanceR - PFDistanceL) / (2 * robotRadius);
                 double estDistanceTravelled = (PFDistanceR + PFDistanceL) / 2;
-                /*
-                if (estDistanceTravelled > 5)
-                {
-                    Console.WriteLine("PREROLL Left Encoder: " + tempDiffL + " PREROLL Right Encoder: " + tempDiffR);
-                    Console.WriteLine("Left Encoder: " + PFEncoderDiffL + " Right Encoder: " + PFEncoderDiffR);
-                    Console.WriteLine("Left: " + PFDistanceL + " Right: " + PFDistanceR);
-                    Console.WriteLine("who knows");
-                }
-                */
+
                 double partDeltaX = estDistanceTravelled * Math.Cos(particles[i].t + (estAngleTravelled / 2));
                 double partDeltaY = estDistanceTravelled * Math.Sin(particles[i].t + (estAngleTravelled / 2));
                 double partDeltaT = estAngleTravelled;
