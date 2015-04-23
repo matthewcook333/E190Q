@@ -19,11 +19,12 @@ namespace DrRobot.JaguarControl
         private double maxWorkspaceX =  10;
         private double minWorkspaceY = -10;
         private double maxWorkspaceY =  10;
-        public double yOffset = 40;//30;
-        public double xOffset = -25;
+        public double yOffset = 20;//40;//30;
+        public double xOffset = -10;
 
+        public double colOffset = 0.23;
 
-        public static int[] regionStart = new[] { 1, 2, 3, 6, 15, 18, 21, 22, 242, 243, 244, 245, 246, 17};
+        public static int[] regionStart = new[] { 1, 2, 3, 6, 15, 18, 21, 22};
         public static int[] regionStart2 = new[] {1, 3, 4, 6, 7, 22};
         public static int[] region1 = new[] {4, 5, 6, 7, 8, 15, 19, 20 };
         public static int[] region2 = new[] { 4, 5, 6, 7, 8, 15, 19, 20/*, 242*/ };
@@ -40,19 +41,36 @@ namespace DrRobot.JaguarControl
         public static int[] regionCenterTop = new[] {217, 221, 226, 227, 240, /*243*/ };
         public static int[] regionCenterLeft = new[] {217, 226, 230, 231, 234, 237, 238, 239, 240 /*243*/};
         public static int[] regionCenterRight = new[] { 223, 224, 230, 231, 232, 233};
-        public static int[] regionRightColumns = new[] { 223, 233, 222, 228, 112, 113, 114, 120, 121, 122, 117, 125};
+        public static int[] regionRightColumns = new[] { 223, 233, 222, 228, 112, 113, 114, 120, 121, 117, 125};
         // for when facing up
         public static int[] regionRightColumns2 = new[] { 223, 233, 222, 228, 108, 109, 111, 112, 113, 114, 117, 125 };
+        public static int[] regionRightColumns3 = new[] { 222, 104, 105, 107, 108, 109, 111, 112, 113, 117 };
+        public static int[] regionRightColumns4 = new[] { 222, 100, 101, 103, 104, 105, 107, 108, 111 };
+        public static int[] regionRightColumns5 = new[] { 222, 227, 85, 93, 99, 100, 101, 103, 104, 105, 107, 111 };
+        public static int[] regionRightColumns6 = new[] { 227, 85, 86, 92, 93, 100, 101, 99, 103, 104, 111 };
+        public static int[] regionRightColumns7 = new[] { 227, 85, 86, 89, 92, 93, 94, 100, 99, 100, 111, 254,};
+        public static int[] regionRightColumns8 = new[] { 81, 82, 83, 86, 89, 90, 91, 94, 100, 111, 254, 253, 251, 249};
+        public static int[] regionTrashCan = new[] { 82, 89, 90, 111, 242, 246, 249, 251, 253, 254};
+        public static int[] regionParsons = new[] { 82, 87, 90, 111, 242, 243, 244, 245, 246, 247, 248, 249, 251, 252, 253 };
+        public static int[] regionParsonsRight = new[] { 89, 90, 91, 94, 251, 111, 242, 243, 244, 245, 246, 248, 249, 250, 253, 254, 255 };
+        public static int[] regionSprint = new[] {251, 246 };
+        public static int[] regionParsonsTurn = new[] { 82, 87, 90, 242, 243, 244, 245, 246, 247, 248, 251, 252, 253 };
+        public static int[] regionParsonsLeave = new[] { 82, 87, 89, 90, 95, 98, 111, 242, 243, 244, 245, 246, 247, 248, 249, 251, 252, 253, 254 };
 
 
 
 
-        public int[][] regions = new[] { regionRightColumns2, regionStart, regionStart, regionStart2, regionStart2, region1,
+
+
+        public int[][] regions = new[] { regionStart, regionStart, regionStart2, regionStart2, region1,
             region1, region1, region2, regionTopColumns, regionTopColumns, 
             region3, region3, region4, region4LessColumns, region4LessColumns, 
             regionCenterTop, regionCenterTop, regionCenterTop, regionCenterLeft, regionCenterLeft, 
             regionCenterLeft, regionCenterLeft, regionCenterLeft, regionCenterRight, regionCenterRight, 
-            regionCenterRight, regionRightColumns, regionRightColumns};
+            regionCenterRight, regionRightColumns, regionRightColumns, regionRightColumns2, regionRightColumns3, 
+            regionRightColumns4, regionRightColumns5, regionRightColumns6, regionRightColumns7, regionRightColumns8,
+            regionTrashCan, regionParsons, regionParsonsTurn, regionParsonsLeave, regionParsonsLeave, regionParsonsRight,
+            regionSprint, regionSprint, regionSprint};
         public int currentRegion = 0;
 
         public Map(Navigation nav)
@@ -375,217 +393,217 @@ namespace DrRobot.JaguarControl
             mapSegmentCorners[74, 1, 0] = 11.18;
             mapSegmentCorners[74, 1, 1] = -18.98;
             mapSegmentCorners[75, 0, 0] = 10.88;
-            mapSegmentCorners[75, 0, 1] = -22.435;
+            mapSegmentCorners[75, 0, 1] = -22.435 + colOffset;
             mapSegmentCorners[75, 1, 0] = 11.18;
-            mapSegmentCorners[75, 1, 1] = -22.435;
+            mapSegmentCorners[75, 1, 1] = -22.435 + colOffset;
             mapSegmentCorners[76, 0, 0] = 10.88;
-            mapSegmentCorners[76, 0, 1] = -22.435;
+            mapSegmentCorners[76, 0, 1] = -22.435 + colOffset;
             mapSegmentCorners[76, 1, 0] = 10.88;
-            mapSegmentCorners[76, 1, 1] = -22.73;
+            mapSegmentCorners[76, 1, 1] = -22.73 + colOffset;
             mapSegmentCorners[77, 0, 0] = 10.88;
-            mapSegmentCorners[77, 0, 1] = -22.73;
+            mapSegmentCorners[77, 0, 1] = -22.73 + colOffset;
             mapSegmentCorners[77, 1, 0] = 11.18;
-            mapSegmentCorners[77, 1, 1] = -22.73;
+            mapSegmentCorners[77, 1, 1] = -22.73 + colOffset;
             mapSegmentCorners[78, 0, 0] = 11.18;
-            mapSegmentCorners[78, 0, 1] = -22.73;
+            mapSegmentCorners[78, 0, 1] = -22.73 + colOffset;
             mapSegmentCorners[78, 1, 0] = 11.18;
-            mapSegmentCorners[78, 1, 1] = -22.435;
+            mapSegmentCorners[78, 1, 1] = -22.435 + colOffset;
             mapSegmentCorners[79, 0, 0] = 14.53;
-            mapSegmentCorners[79, 0, 1] = -18.98;
+            mapSegmentCorners[79, 0, 1] = -18.98 + colOffset;
             mapSegmentCorners[79, 1, 0] = 14.83;
-            mapSegmentCorners[79, 1, 1] = -18.98;
+            mapSegmentCorners[79, 1, 1] = -18.98 + colOffset;
             mapSegmentCorners[80, 0, 0] = 14.53;
-            mapSegmentCorners[80, 0, 1] = -18.98;
+            mapSegmentCorners[80, 0, 1] = -18.98 + colOffset;
             mapSegmentCorners[80, 1, 0] = 14.53;
-            mapSegmentCorners[80, 1, 1] = -19.275;
+            mapSegmentCorners[80, 1, 1] = -19.275 + colOffset;
             mapSegmentCorners[81, 0, 0] = 14.53;
-            mapSegmentCorners[81, 0, 1] = -19.275;
+            mapSegmentCorners[81, 0, 1] = -19.275 + colOffset;
             mapSegmentCorners[81, 1, 0] = 14.83;
-            mapSegmentCorners[81, 1, 1] = -19.275;
+            mapSegmentCorners[81, 1, 1] = -19.275 + colOffset;
             mapSegmentCorners[82, 0, 0] = 14.83;
-            mapSegmentCorners[82, 0, 1] = -19.275;
+            mapSegmentCorners[82, 0, 1] = -19.275 + colOffset;
             mapSegmentCorners[82, 1, 0] = 14.83;
-            mapSegmentCorners[82, 1, 1] = -18.98;
+            mapSegmentCorners[82, 1, 1] = -18.98 + colOffset;
             mapSegmentCorners[83, 0, 0] = 14.53;
-            mapSegmentCorners[83, 0, 1] = -22.435;
+            mapSegmentCorners[83, 0, 1] = -22.435 + colOffset;
             mapSegmentCorners[83, 1, 0] = 14.83;
-            mapSegmentCorners[83, 1, 1] = -22.435;
+            mapSegmentCorners[83, 1, 1] = -22.435 + colOffset;
             mapSegmentCorners[84, 0, 0] = 14.53;
-            mapSegmentCorners[84, 0, 1] = -22.435;
+            mapSegmentCorners[84, 0, 1] = -22.435 + colOffset;
             mapSegmentCorners[84, 1, 0] = 14.53;
-            mapSegmentCorners[84, 1, 1] = -22.73;
+            mapSegmentCorners[84, 1, 1] = -22.73 + colOffset;
             mapSegmentCorners[85, 0, 0] = 14.53;
-            mapSegmentCorners[85, 0, 1] = -22.73;
+            mapSegmentCorners[85, 0, 1] = -22.73 + colOffset;
             mapSegmentCorners[85, 1, 0] = 14.83;
-            mapSegmentCorners[85, 1, 1] = -22.73;
+            mapSegmentCorners[85, 1, 1] = -22.73 + colOffset;
             mapSegmentCorners[86, 0, 0] = 14.83;
-            mapSegmentCorners[86, 0, 1] = -22.73;
+            mapSegmentCorners[86, 0, 1] = -22.73 + colOffset;
             mapSegmentCorners[86, 1, 0] = 14.83;
-            mapSegmentCorners[86, 1, 1] = -22.435;
+            mapSegmentCorners[86, 1, 1] = -22.435 + colOffset;
             mapSegmentCorners[87, 0, 0] = 18.18;
-            mapSegmentCorners[87, 0, 1] = -18.98;
+            mapSegmentCorners[87, 0, 1] = -18.98 + colOffset;
             mapSegmentCorners[87, 1, 0] = 18.48;
-            mapSegmentCorners[87, 1, 1] = -18.98;
+            mapSegmentCorners[87, 1, 1] = -18.98 + colOffset;
             mapSegmentCorners[88, 0, 0] = 18.18;
-            mapSegmentCorners[88, 0, 1] = -18.98;
+            mapSegmentCorners[88, 0, 1] = -18.98 + colOffset;
             mapSegmentCorners[88, 1, 0] = 18.18;
-            mapSegmentCorners[88, 1, 1] = -19.275;
+            mapSegmentCorners[88, 1, 1] = -19.275 + colOffset;
             mapSegmentCorners[89, 0, 0] = 18.18;
-            mapSegmentCorners[89, 0, 1] = -19.275;
+            mapSegmentCorners[89, 0, 1] = -19.275 + colOffset;
             mapSegmentCorners[89, 1, 0] = 18.48;
-            mapSegmentCorners[89, 1, 1] = -19.275;
+            mapSegmentCorners[89, 1, 1] = -19.275 + colOffset;
             mapSegmentCorners[90, 0, 0] = 18.48;
-            mapSegmentCorners[90, 0, 1] = -19.275;
+            mapSegmentCorners[90, 0, 1] = -19.275 + colOffset;
             mapSegmentCorners[90, 1, 0] = 18.48;
-            mapSegmentCorners[90, 1, 1] = -18.98;
+            mapSegmentCorners[90, 1, 1] = -18.98 + colOffset;
             mapSegmentCorners[91, 0, 0] = 18.18;
-            mapSegmentCorners[91, 0, 1] = -22.435;
+            mapSegmentCorners[91, 0, 1] = -22.435 + colOffset;
             mapSegmentCorners[91, 1, 0] = 18.48;
-            mapSegmentCorners[91, 1, 1] = -22.435;
+            mapSegmentCorners[91, 1, 1] = -22.435 + colOffset;
             mapSegmentCorners[92, 0, 0] = 18.18;
-            mapSegmentCorners[92, 0, 1] = -22.435;
+            mapSegmentCorners[92, 0, 1] = -22.435 + colOffset;
             mapSegmentCorners[92, 1, 0] = 18.18;
-            mapSegmentCorners[92, 1, 1] = -22.73;
+            mapSegmentCorners[92, 1, 1] = -22.73 + colOffset;
             mapSegmentCorners[93, 0, 0] = 18.18;
-            mapSegmentCorners[93, 0, 1] = -22.73;
+            mapSegmentCorners[93, 0, 1] = -22.73 + colOffset;
             mapSegmentCorners[93, 1, 0] = 18.48;
-            mapSegmentCorners[93, 1, 1] = -22.73;
+            mapSegmentCorners[93, 1, 1] = -22.73 + colOffset;
             mapSegmentCorners[94, 0, 0] = 18.48;
-            mapSegmentCorners[94, 0, 1] = -22.73;
+            mapSegmentCorners[94, 0, 1] = -22.73 + colOffset;
             mapSegmentCorners[94, 1, 0] = 18.48;
-            mapSegmentCorners[94, 1, 1] = -22.435;
+            mapSegmentCorners[94, 1, 1] = -22.435 + colOffset;
             mapSegmentCorners[95, 0, 0] = 18.18;
-            mapSegmentCorners[95, 0, 1] = -22.435;
+            mapSegmentCorners[95, 0, 1] = -22.435 + colOffset;
             mapSegmentCorners[95, 1, 0] = 18.475;
-            mapSegmentCorners[95, 1, 1] = -22.435;
+            mapSegmentCorners[95, 1, 1] = -22.435 + colOffset;
             mapSegmentCorners[96, 0, 0] = 18.18;
-            mapSegmentCorners[96, 0, 1] = -22.435;
+            mapSegmentCorners[96, 0, 1] = -22.435 + colOffset;
             mapSegmentCorners[96, 1, 0] = 18.18;
-            mapSegmentCorners[96, 1, 1] = -22.735;
+            mapSegmentCorners[96, 1, 1] = -22.735 + colOffset;
             mapSegmentCorners[97, 0, 0] = 18.18;
-            mapSegmentCorners[97, 0, 1] = -22.735;
+            mapSegmentCorners[97, 0, 1] = -22.735 + colOffset;
             mapSegmentCorners[97, 1, 0] = 18.475;
-            mapSegmentCorners[97, 1, 1] = -22.735;
+            mapSegmentCorners[97, 1, 1] = -22.735 + colOffset;
             mapSegmentCorners[98, 0, 0] = 18.475;
-            mapSegmentCorners[98, 0, 1] = -22.735;
+            mapSegmentCorners[98, 0, 1] = -22.735 + colOffset;
             mapSegmentCorners[98, 1, 0] = 18.475;
-            mapSegmentCorners[98, 1, 1] = -22.435;
+            mapSegmentCorners[98, 1, 1] = -22.435 + colOffset;
             mapSegmentCorners[99, 0, 0] = 18.18;
-            mapSegmentCorners[99, 0, 1] = -25.795;
+            mapSegmentCorners[99, 0, 1] = -25.795 + colOffset;
             mapSegmentCorners[99, 1, 0] = 18.475;
-            mapSegmentCorners[99, 1, 1] = -25.795;
+            mapSegmentCorners[99, 1, 1] = -25.795 + colOffset;
             mapSegmentCorners[100, 0, 0] = 18.18;
-            mapSegmentCorners[100, 0, 1] = -25.795;
+            mapSegmentCorners[100, 0, 1] = -25.795 + colOffset;
             mapSegmentCorners[100, 1, 0] = 18.18;
-            mapSegmentCorners[100, 1, 1] = -26.095;
+            mapSegmentCorners[100, 1, 1] = -26.095 + colOffset;
             mapSegmentCorners[101, 0, 0] = 18.18;
-            mapSegmentCorners[101, 0, 1] = -26.095;
+            mapSegmentCorners[101, 0, 1] = -26.095 + colOffset;
             mapSegmentCorners[101, 1, 0] = 18.475;
-            mapSegmentCorners[101, 1, 1] = -26.095;
+            mapSegmentCorners[101, 1, 1] = -26.095 + colOffset;
             mapSegmentCorners[102, 0, 0] = 18.475;
-            mapSegmentCorners[102, 0, 1] = -26.095;
+            mapSegmentCorners[102, 0, 1] = -26.095 + colOffset;
             mapSegmentCorners[102, 1, 0] = 18.475;
-            mapSegmentCorners[102, 1, 1] = -25.795;
+            mapSegmentCorners[102, 1, 1] = -25.795 + colOffset;
             mapSegmentCorners[103, 0, 0] = 18.18;
-            mapSegmentCorners[103, 0, 1] = -29.155;
+            mapSegmentCorners[103, 0, 1] = -29.155 + colOffset;
             mapSegmentCorners[103, 1, 0] = 18.475;
-            mapSegmentCorners[103, 1, 1] = -29.155;
+            mapSegmentCorners[103, 1, 1] = -29.155 + colOffset;
             mapSegmentCorners[104, 0, 0] = 18.18;
-            mapSegmentCorners[104, 0, 1] = -29.155;
+            mapSegmentCorners[104, 0, 1] = -29.155 + colOffset;
             mapSegmentCorners[104, 1, 0] = 18.18;
-            mapSegmentCorners[104, 1, 1] = -29.455;
+            mapSegmentCorners[104, 1, 1] = -29.455 + colOffset;
             mapSegmentCorners[105, 0, 0] = 18.18;
-            mapSegmentCorners[105, 0, 1] = -29.455;
+            mapSegmentCorners[105, 0, 1] = -29.455 + colOffset;
             mapSegmentCorners[105, 1, 0] = 18.475;
-            mapSegmentCorners[105, 1, 1] = -29.455;
+            mapSegmentCorners[105, 1, 1] = -29.455 + colOffset;
             mapSegmentCorners[106, 0, 0] = 18.475;
-            mapSegmentCorners[106, 0, 1] = -29.455;
+            mapSegmentCorners[106, 0, 1] = -29.455 + colOffset;
             mapSegmentCorners[106, 1, 0] = 18.475;
-            mapSegmentCorners[106, 1, 1] = -29.155;
+            mapSegmentCorners[106, 1, 1] = -29.155 + colOffset;
             mapSegmentCorners[107, 0, 0] = 18.18;
-            mapSegmentCorners[107, 0, 1] = -32.515;
+            mapSegmentCorners[107, 0, 1] = -32.515 + colOffset;
             mapSegmentCorners[107, 1, 0] = 18.475;
-            mapSegmentCorners[107, 1, 1] = -32.515;
+            mapSegmentCorners[107, 1, 1] = -32.515 + colOffset;
             mapSegmentCorners[108, 0, 0] = 18.18;
-            mapSegmentCorners[108, 0, 1] = -32.515;
+            mapSegmentCorners[108, 0, 1] = -32.515 + colOffset;
             mapSegmentCorners[108, 1, 0] = 18.18;
-            mapSegmentCorners[108, 1, 1] = -32.815;
+            mapSegmentCorners[108, 1, 1] = -32.815 + colOffset;
             mapSegmentCorners[109, 0, 0] = 18.18;
-            mapSegmentCorners[109, 0, 1] = -32.815;
+            mapSegmentCorners[109, 0, 1] = -32.815 + colOffset;
             mapSegmentCorners[109, 1, 0] = 18.475;
-            mapSegmentCorners[109, 1, 1] = -32.815;
+            mapSegmentCorners[109, 1, 1] = -32.815 + colOffset;
             mapSegmentCorners[110, 0, 0] = 18.475;
-            mapSegmentCorners[110, 0, 1] = -32.815;
+            mapSegmentCorners[110, 0, 1] = -32.815 + colOffset;
             mapSegmentCorners[110, 1, 0] = 18.475;
-            mapSegmentCorners[110, 1, 1] = -32.515;
+            mapSegmentCorners[110, 1, 1] = -32.515 + colOffset;
             mapSegmentCorners[111, 0, 0] = 21.825;
-            mapSegmentCorners[111, 0, 1] = -22.435;
+            mapSegmentCorners[111, 0, 1] = -22.435 + colOffset;
             mapSegmentCorners[111, 1, 0] = 21.825;
-            mapSegmentCorners[111, 1, 1] = -32.815;
+            mapSegmentCorners[111, 1, 1] = -32.815 + colOffset;
             mapSegmentCorners[112, 0, 0] = 18.18;
-            mapSegmentCorners[112, 0, 1] = -35.875;
+            mapSegmentCorners[112, 0, 1] = -35.875 + colOffset;
             mapSegmentCorners[112, 1, 0] = 18.475;
-            mapSegmentCorners[112, 1, 1] = -35.875;
+            mapSegmentCorners[112, 1, 1] = -35.875 + colOffset;
             mapSegmentCorners[113, 0, 0] = 18.18;
-            mapSegmentCorners[113, 0, 1] = -35.875;
+            mapSegmentCorners[113, 0, 1] = -35.875 + colOffset;
             mapSegmentCorners[113, 1, 0] = 18.18;
-            mapSegmentCorners[113, 1, 1] = -36.175;
+            mapSegmentCorners[113, 1, 1] = -36.175 + colOffset;
             mapSegmentCorners[114, 0, 0] = 18.18;
-            mapSegmentCorners[114, 0, 1] = -36.175;
+            mapSegmentCorners[114, 0, 1] = -36.175 + colOffset;
             mapSegmentCorners[114, 1, 0] = 18.475;
-            mapSegmentCorners[114, 1, 1] = -36.175;
+            mapSegmentCorners[114, 1, 1] = -36.175 + colOffset;
             mapSegmentCorners[115, 0, 0] = 18.475;
-            mapSegmentCorners[115, 0, 1] = -36.175;
+            mapSegmentCorners[115, 0, 1] = -36.175 + colOffset;
             mapSegmentCorners[115, 1, 0] = 18.475;
-            mapSegmentCorners[115, 1, 1] = -35.875;
+            mapSegmentCorners[115, 1, 1] = -35.875 + colOffset;
             mapSegmentCorners[116, 0, 0] = 21.825;
-            mapSegmentCorners[116, 0, 1] = -35.875;
+            mapSegmentCorners[116, 0, 1] = -35.875 + colOffset;
             mapSegmentCorners[116, 1, 0] = 22.12;
-            mapSegmentCorners[116, 1, 1] = -35.875;
+            mapSegmentCorners[116, 1, 1] = -35.875 + colOffset;
             mapSegmentCorners[117, 0, 0] = 21.825;
-            mapSegmentCorners[117, 0, 1] = -35.875;
+            mapSegmentCorners[117, 0, 1] = -35.875 + colOffset;
             mapSegmentCorners[117, 1, 0] = 21.825;
-            mapSegmentCorners[117, 1, 1] = -36.175;
+            mapSegmentCorners[117, 1, 1] = -36.175 + colOffset;
             mapSegmentCorners[118, 0, 0] = 21.825;
-            mapSegmentCorners[118, 0, 1] = -36.175;
+            mapSegmentCorners[118, 0, 1] = -36.175 + colOffset;
             mapSegmentCorners[118, 1, 0] = 22.12;
-            mapSegmentCorners[118, 1, 1] = -36.175;
+            mapSegmentCorners[118, 1, 1] = -36.175 + colOffset;
             mapSegmentCorners[119, 0, 0] = 22.12;
-            mapSegmentCorners[119, 0, 1] = -36.175;
+            mapSegmentCorners[119, 0, 1] = -36.175 + colOffset;
             mapSegmentCorners[119, 1, 0] = 22.12;
-            mapSegmentCorners[119, 1, 1] = -35.875;
+            mapSegmentCorners[119, 1, 1] = -35.875 + colOffset;
             mapSegmentCorners[120, 0, 0] = 18.18;
-            mapSegmentCorners[120, 0, 1] = -39.235;
+            mapSegmentCorners[120, 0, 1] = -39.235 + colOffset;
             mapSegmentCorners[120, 1, 0] = 18.475;
-            mapSegmentCorners[120, 1, 1] = -39.235;
+            mapSegmentCorners[120, 1, 1] = -39.235 + colOffset;
             mapSegmentCorners[121, 0, 0] = 18.18;
-            mapSegmentCorners[121, 0, 1] = -39.235;
+            mapSegmentCorners[121, 0, 1] = -39.235 + colOffset;
             mapSegmentCorners[121, 1, 0] = 18.18;
-            mapSegmentCorners[121, 1, 1] = -39.535;
+            mapSegmentCorners[121, 1, 1] = -39.535 + colOffset;
             mapSegmentCorners[122, 0, 0] = 18.18;
-            mapSegmentCorners[122, 0, 1] = -39.535;
+            mapSegmentCorners[122, 0, 1] = -39.535 + colOffset;
             mapSegmentCorners[122, 1, 0] = 18.475;
-            mapSegmentCorners[122, 1, 1] = -39.535;
+            mapSegmentCorners[122, 1, 1] = -39.535 + colOffset;
             mapSegmentCorners[123, 0, 0] = 18.475;
-            mapSegmentCorners[123, 0, 1] = -39.535;
+            mapSegmentCorners[123, 0, 1] = -39.535 + colOffset;
             mapSegmentCorners[123, 1, 0] = 18.475;
-            mapSegmentCorners[123, 1, 1] = -39.235;
+            mapSegmentCorners[123, 1, 1] = -39.235 + colOffset;
             mapSegmentCorners[124, 0, 0] = 21.825;
-            mapSegmentCorners[124, 0, 1] = -39.235;
+            mapSegmentCorners[124, 0, 1] = -39.235 + colOffset;
             mapSegmentCorners[124, 1, 0] = 22.12;
-            mapSegmentCorners[124, 1, 1] = -39.235;
+            mapSegmentCorners[124, 1, 1] = -39.235 + colOffset;
             mapSegmentCorners[125, 0, 0] = 21.825;
-            mapSegmentCorners[125, 0, 1] = -39.235;
+            mapSegmentCorners[125, 0, 1] = -39.235 + colOffset;
             mapSegmentCorners[125, 1, 0] = 21.825;
-            mapSegmentCorners[125, 1, 1] = -39.535;
+            mapSegmentCorners[125, 1, 1] = -39.535 + colOffset;
             mapSegmentCorners[126, 0, 0] = 21.825;
-            mapSegmentCorners[126, 0, 1] = -39.535;
+            mapSegmentCorners[126, 0, 1] = -39.535 + colOffset;
             mapSegmentCorners[126, 1, 0] = 22.12;
-            mapSegmentCorners[126, 1, 1] = -39.535;
+            mapSegmentCorners[126, 1, 1] = -39.535 + colOffset;
             mapSegmentCorners[127, 0, 0] = 22.12;
-            mapSegmentCorners[127, 0, 1] = -39.535;
+            mapSegmentCorners[127, 0, 1] = -39.535 + colOffset;
             mapSegmentCorners[127, 1, 0] = 22.12;
-            mapSegmentCorners[127, 1, 1] = -39.235;
+            mapSegmentCorners[127, 1, 1] = -39.235 + colOffset;
             mapSegmentCorners[128, 0, 0] = 18.18;
             mapSegmentCorners[128, 0, 1] = -42.595;
             mapSegmentCorners[128, 1, 0] = 18.475;
@@ -2934,58 +2952,58 @@ mapSegmentCorners[241, 1, 1] = -53.2399;
             // more walls Top Right section 
             // REMEMBER TO ADD 3.53 to y-values!
 
-            // long horiz wall
+            // long horiz wall left of parsons
             mapSegmentCorners[242, 0, 0] = mapSegmentCorners[17, 0, 0];
             mapSegmentCorners[242, 0, 1] = mapSegmentCorners[17, 1, 1];
-            mapSegmentCorners[242, 1, 0] = mapSegmentCorners[17, 0, 0] + 7.874;
+            mapSegmentCorners[242, 1, 0] = mapSegmentCorners[17, 0, 0] + 7.5;// +7.874;
             mapSegmentCorners[242, 1, 1] = mapSegmentCorners[17, 1, 1];
 
             // doorway left side
-            mapSegmentCorners[243, 0, 0] = mapSegmentCorners[17, 0, 0] + 7.874;
+            mapSegmentCorners[243, 0, 0] = mapSegmentCorners[17, 0, 0] + 7.5;
             mapSegmentCorners[243, 0, 1] = mapSegmentCorners[17, 1, 1];
-            mapSegmentCorners[243, 1, 0] = mapSegmentCorners[17, 0, 0] + 7.874;
+            mapSegmentCorners[243, 1, 0] = mapSegmentCorners[17, 0, 0] + 7.5;
             mapSegmentCorners[243, 1, 1] = mapSegmentCorners[17, 1, 1] + 1.098;
 
             // doorway top side
-            mapSegmentCorners[244, 0, 0] = mapSegmentCorners[17, 0, 0] + 7.874;
+            mapSegmentCorners[244, 0, 0] = mapSegmentCorners[17, 0, 0] + 7.5;
             mapSegmentCorners[244, 0, 1] = mapSegmentCorners[17, 1, 1] + 1.098;
-            mapSegmentCorners[244, 1, 0] = mapSegmentCorners[17, 0, 0] + 7.874 + 1.987;
+            mapSegmentCorners[244, 1, 0] = mapSegmentCorners[17, 0, 0] + 7.5 + 1.987;
             mapSegmentCorners[244, 1, 1] = mapSegmentCorners[17, 1, 1] + 1.098;
 
             // doorway right side
-            mapSegmentCorners[245, 0, 0] = mapSegmentCorners[17, 0, 0] + 7.874 + 1.987;
+            mapSegmentCorners[245, 0, 0] = mapSegmentCorners[17, 0, 0] + 7.5 + 1.987;
             mapSegmentCorners[245, 0, 1] = mapSegmentCorners[17, 1, 1];
-            mapSegmentCorners[245, 1, 0] = mapSegmentCorners[17, 0, 0] + 7.874 + 1.987;
+            mapSegmentCorners[245, 1, 0] = mapSegmentCorners[17, 0, 0] + 7.5 + 1.987;
             mapSegmentCorners[245, 1, 1] = mapSegmentCorners[17, 1, 1] + 1.098;
 
             // righter horiz wall
-            mapSegmentCorners[246, 0, 0] = mapSegmentCorners[17, 0, 0] + 7.874 + 1.987;
+            mapSegmentCorners[246, 0, 0] = mapSegmentCorners[17, 0, 0] + 7.5 /*7.874*/ + 1.987;
             mapSegmentCorners[246, 0, 1] = mapSegmentCorners[17, 1, 1];
-            mapSegmentCorners[246, 1, 0] = mapSegmentCorners[17, 0, 0] + 7.874 + 1.987 + 5.563;
+            mapSegmentCorners[246, 1, 0] = mapSegmentCorners[17, 0, 0] + 7.5 /*7.874*/ + 1.987 + 5.563;
             mapSegmentCorners[246, 1, 1] = mapSegmentCorners[17, 1, 1];
 
             // trash can top
-            mapSegmentCorners[247, 0, 0] = mapSegmentCorners[246, 0, 0] + 0.508;
+            mapSegmentCorners[247, 0, 0] = mapSegmentCorners[246, 0, 0] + 0.2;
             mapSegmentCorners[247, 0, 1] = mapSegmentCorners[246, 1, 1] - 1.1176;
-            mapSegmentCorners[247, 1, 0] = mapSegmentCorners[246, 0, 0] + 0.508 + 0.635;
+            mapSegmentCorners[247, 1, 0] = mapSegmentCorners[246, 0, 0] + 0.2 + 0.635;
             mapSegmentCorners[247, 1, 1] = mapSegmentCorners[246, 1, 1] - 1.1176;
 
             // trash can left
-            mapSegmentCorners[248, 0, 0] = mapSegmentCorners[246, 0, 0] + 0.508;
+            mapSegmentCorners[248, 0, 0] = mapSegmentCorners[246, 0, 0] + 0.2;
             mapSegmentCorners[248, 0, 1] = mapSegmentCorners[246, 1, 1] - 1.1176;
-            mapSegmentCorners[248, 1, 0] = mapSegmentCorners[246, 0, 0] + 0.508;
+            mapSegmentCorners[248, 1, 0] = mapSegmentCorners[246, 0, 0] + 0.2;
             mapSegmentCorners[248, 1, 1] = mapSegmentCorners[246, 1, 1] - 1.1176 - 0.635;
 
             // trash can bottom
-            mapSegmentCorners[249, 0, 0] = mapSegmentCorners[246, 0, 0] + 0.508;
+            mapSegmentCorners[249, 0, 0] = mapSegmentCorners[246, 0, 0] + 0.2;
             mapSegmentCorners[249, 0, 1] = mapSegmentCorners[246, 1, 1] - 1.1176 - 0.635;
-            mapSegmentCorners[249, 1, 0] = mapSegmentCorners[246, 0, 0] + 0.508 + 0.635;
+            mapSegmentCorners[249, 1, 0] = mapSegmentCorners[246, 0, 0] + 0.2 + 0.635;
             mapSegmentCorners[249, 1, 1] = mapSegmentCorners[246, 1, 1] - 1.1176 - 0.635;
 
             // trash can right
-            mapSegmentCorners[250, 0, 0] = mapSegmentCorners[246, 0, 0] + 0.508 + 0.635;
+            mapSegmentCorners[250, 0, 0] = mapSegmentCorners[246, 0, 0] + 0.2 + 0.635;
             mapSegmentCorners[250, 0, 1] = mapSegmentCorners[246, 1, 1] - 1.1176;
-            mapSegmentCorners[250, 1, 0] = mapSegmentCorners[246, 0, 0] + 0.508 + 0.635;
+            mapSegmentCorners[250, 1, 0] = mapSegmentCorners[246, 0, 0] + 0.2 + 0.635;
             mapSegmentCorners[250, 1, 1] = mapSegmentCorners[246, 1, 1] - 1.1176 - 0.635;
 
             // super long far right horiz

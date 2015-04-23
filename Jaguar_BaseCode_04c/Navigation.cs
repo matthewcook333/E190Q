@@ -146,9 +146,9 @@ namespace DrRobot.JaguarControl
         // This is called every time the reset button is pressed
         public void Initialize()
         {
-            initialX = map.xOffset + 3;
-            initialY = map.yOffset - 4;// -11;
-            initialT = -3.14;
+            initialX = map.xOffset + 3;// 11;
+            initialY = map.yOffset - 4; //41;
+            initialT = -3.14;// 0
 
             map.currentRegion = 0;
             currentWaypoint = 0;
@@ -661,7 +661,7 @@ namespace DrRobot.JaguarControl
             {
                 double thetaError = AngleDiff(desiredT, t_est);
                 double epsilon = 0.2;// 0.175;
-                short spinSpeed = (short)(/*60*//*50*/ 37 + Math.Abs(thetaError) * 20/*15*/ / Math.PI);
+                short spinSpeed = (short)(/*60*//*50*/ /*37*/ 47 + Math.Abs(thetaError) * 20/*15*/ / Math.PI);
 
                 if (thetaError > 0 && Math.Abs(thetaError) > epsilon)
                 {
@@ -702,10 +702,10 @@ namespace DrRobot.JaguarControl
         // for lab 4 test
         //private double[] waypoints = {0.5, -0.5, -1.4, 1, -4, -1, 4, -4.5, 0 };
         private double[] origwaypoints = {0, -4, -3.14, //regionStart
-                                          -3.75, -4, -3.14, //regionStart
-                                          -3.75, -4, -1.57, //regionStart2
-                                          -3.75, -11.5, -1.57, //regionStart2
-                                          -3.75, -11.5, 0, //region1
+                                          -3.9, -4, -3.14, //regionStart
+                                          -3.9, -4, -1.57, //regionStart2
+                                          -3.9, -11.5, -1.57, //regionStart2
+                                          -3.9, -11.5, 0, //region1
                                           0, -11.5, -0.4, 
                                           0, -13.5, -1.5, 
                                           0.25, -15.5, -1.6, 
@@ -725,12 +725,27 @@ namespace DrRobot.JaguarControl
                                           0.5, -44.5, 1.57, //get out
                                           0.5, -44.5, 0,
                                           6, -44.5, 0,
-                                          11, -41, 0,
+                                          11, -41, 0, // 25 for counting. Comment out here for partway
                                           13, -41, 0, //wp center right 6th milestone
                                           16.5, -41, 0,
                                           16.5, -41, 1.57, //turn up
-                                          16.5, -39, 1.57
-                                          };
+                                          16.5, -39, 1.57,
+                                          16.5, -35, 1.57, // 30 for counting
+                                          16.5, -32, 1.57,
+                                          16.5, -30, 1.57, 
+                                          16.5, -28, 1.57, //final location outside of columns
+                                          20, -27, 1.57,
+                                          20, -24, 1.57,
+                                          20, -21, 1.57, // before waypoint
+                                          20, -19.25, 1.57, // AT REGION 7
+                                          20, -19.25, -1.57, // turn around
+                                          20, -24.5, -1.57, //backing out 
+                                          20, -24.5, 0, //turn right dir
+                                          23, -24.5, 0, //get out of area
+                                          38, -24.5, 0, // SPRINT
+                                          38, -24.5, 1.57, // TURN UP!
+                                          38, -14.88, 1.57 //MADE IT
+                                         };
         private double[] waypoints;
         private int currentWaypoint = 0;
         private Boolean reachedDest = false;
@@ -1028,11 +1043,16 @@ namespace DrRobot.JaguarControl
             double variance = 0.030; // meters
             for (int i = 0; i < LaserData.Length; i = i + laserStepSize)
             {
+                double sampledRange = LaserData[i] / 1000.0;
+                if (sampledRange < 0.05)
+                {
+                    //Console.WriteLine("TERRIBLE LASER DATA: " + sampledRange);
+                    continue;
+                }
                 double expectedRange = map.GetClosestWallDistance(
                     propagatedParticles[p].x, 
                     propagatedParticles[p].y, 
                     propagatedParticles[p].t - 1.57 + laserAngles[i]);
-                double sampledRange = LaserData[i] / 1000.0;
                 double weight = (1.0 / (Math.Sqrt(variance) * Math.Sqrt(2 * Math.PI))) *
                     Math.Pow(Math.E, (-Math.Pow(sampledRange - expectedRange, 2) / (2 * variance)));
                 propagatedParticles[p].w += weight;
