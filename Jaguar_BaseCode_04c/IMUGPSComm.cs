@@ -170,7 +170,8 @@ namespace DrRobot.JaguarControl
 
             //for IMU
             int remotePort = jaguarSetting.IMUPort;
-            String IPAddr = jaguarSetting.IMUIP;
+            // String IPAddr = jaguarSetting.IMUIP;
+            String IPAddr = "192.168.0.66";
             firstSetupComm = true;
             try
             {

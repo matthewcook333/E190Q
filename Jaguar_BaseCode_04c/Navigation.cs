@@ -52,7 +52,7 @@ namespace DrRobot.JaguarControl
         public double robotRadius = 0.242;//0.232
         private double angleTravelled, distanceTravelled;
         private double diffEncoderPulseL, diffEncoderPulseR;
-        private double maxVelocity = 0.23;//0.21;//0.21;//0.23;//0.21;//0.25;
+        private double maxVelocity = 0.30;//0.23;//0.21;//0.21;//0.23;//0.21;//0.25;
         private double Kpho = 1;
         private double Kalpha = 8;//4;//4;//8
         private double Kbeta = -0.5;//-0.5//-1.0;
@@ -146,9 +146,9 @@ namespace DrRobot.JaguarControl
         // This is called every time the reset button is pressed
         public void Initialize()
         {
-            initialX = map.xOffset + 11;// 3;// 11;
-            initialY = map.yOffset - 41;// 4; //41;
-            initialT = 0;// -3.14;// 0
+            initialX = map.xOffset + 3;// 20;//3;// 11;
+            initialY = map.yOffset - 4;// 24.5;//4; //41;
+            initialT = -3.14;// -3.14;// 0
 
             map.currentRegion = 0;
             currentWaypoint = 0;
@@ -702,7 +702,7 @@ namespace DrRobot.JaguarControl
         // for lab 4 test
         //private double[] waypoints = {0.5, -0.5, -1.4, 1, -4, -1, 4, -4.5, 0 };
         private double[] origwaypoints = {
-        /*0, -4, -3.14, //regionStart
+        0, -4, -3.14, //regionStart
         -3.9, -4, -3.14, //regionStart
         -3.9, -4, -1.57, //regionStart2
         -3.9, -11.5, -1.57, //regionStart2
@@ -726,7 +726,7 @@ namespace DrRobot.JaguarControl
         0.5, -44.5, 1.57, //get out
         0.5, -44.5, 0,
         6, -44.5, 0,
-        11, -41, 0, */// 25 for counting. Comment out here for partway
+        11, -41, 0, // 25 for counting. Comment out here for partway
         13, -41, 0, //wp center right 6th milestone
         16.5, -41, 0,
         16.5, -41, 1.57, //turn up
@@ -739,16 +739,17 @@ namespace DrRobot.JaguarControl
         21.5, -24, 1.57,
         20, -21, 1.57, // before waypoint
         20, -19.25, 1.57, // AT REGION 7
-        20, -19.25, -1.57, // turn around
+        20, -19.25, -1.57, // turn around  
         20, -24.5, -1.57, //backing out 
-        20, -24.5, 0, //turn right dir
+        20, -24.5, 0,  //turn right dir 40 FOR COUNTING
         23, -24.5, 0, //get out of area
         26, -24.5, 0,
         30, -24.5, 0, //intermediate sprint
         34, -24.5, 0,
         40, -24.5, 0, // SPRINT
         40, -24.5, 1.57, // TURN UP!
-        40, -14.88, 1.57 //MADE IT
+        40, -18.5, 1.57, //MADE IT
+        40, -18.5, -1.57 // SPIN MOVE
         };
         private double[] waypoints;
         private int currentWaypoint = 0;
@@ -777,10 +778,14 @@ namespace DrRobot.JaguarControl
                 desiredX = waypoints[currentWaypoint];
                 desiredY = waypoints[currentWaypoint + 1];
                 desiredT = waypoints[currentWaypoint + 2];
-                Console.WriteLine("currentwp: " + currentWaypoint + " going to X: " + desiredX + " Y: " + desiredY + " T: " + desiredT);
+                //Console.WriteLine("currentwp: " + currentWaypoint + " going to X: " + desiredX + " Y: " + desiredY + " T: " + desiredT);
                 if (map.currentRegion < map.regions.Length-1)
                 {
                     ++map.currentRegion;
+                    if (currentWaypoint >= 99)
+                    {
+                        maxVelocity = 0.23;
+                    }
                 }
                 //Thread.Sleep(2000);
             }
@@ -853,7 +858,7 @@ namespace DrRobot.JaguarControl
             // Update the actual
             x += distanceTravelled * Math.Cos(t + (angleTravelled / 2));
             y += distanceTravelled * Math.Sin(t + (angleTravelled / 2));
-            t = -(jaguarControl.getHeading()+270) * Math.PI/180; // offset added to correct north to 0.
+            t += angleTravelled; // =  -(jaguarControl.getHeading() + 270) * Math.PI / 180; // offset added to correct north to 0.
              // Keep angle of robot within -pi and pi
             t = t % (2 * Math.PI);
             if (t > Math.PI)
@@ -903,7 +908,7 @@ namespace DrRobot.JaguarControl
 
 
 
-
+            //double heading = -(jaguarControl.getHeading() + 270) * Math.PI / 180;
             for (int i = 0; i < numParticles; ++i)
             {
                 PFEncoderDiffL = (currentEncoderPulseL - PFLastEncoderL);

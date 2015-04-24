@@ -20,7 +20,7 @@ namespace DrRobot.JaguarControl
         private double minWorkspaceY = -10;
         private double maxWorkspaceY =  10;
         public double yOffset = 25;//40;//30;
-        public double xOffset = -10;
+        public double xOffset = -20;//-10;
 
         public double colOffset = 0.23;
 
@@ -55,22 +55,23 @@ namespace DrRobot.JaguarControl
         public static int[] regionParsonsRight = new[] {86, 89, 90, 91, 94, 251, 111, 242, 243, 244, 245, 246, 248, 249, 250, 253, 254, 255/*, 256*/};
         public static int[] regionParsonsTurn = new[] { 82, 86, 87, 90, 242, 243, 244, 245, 246, 247, 248, 251, 252, 253 };
         public static int[] regionParsonsLeave = new[] { 82, 86, 87, 89, 90, 95, 98, 111, 242, 243, 244, 245, 246, 247, 248, 249, 251, 252, 253, 254/*, 256*/ };
-        public static int[] regionSprint = new[] {251, 246 };
+        public static int[] regionSprint = new[] {251, 246, 256, 257};
     
 
 
 
 
 
-        public int[][] regions = new[] {/*regionStart, regionStart, regionStart2, regionStart2, region1,
+        public int[][] regions = new[] {regionStart, regionStart, regionStart2, regionStart2, region1,
             region1, region1, region2, regionTopColumns, regionTopColumns, 
             region3, region3, region4, region4LessColumns, region4LessColumns, 
             regionCenterTop, regionCenterTop, regionCenterTop, regionCenterLeft, regionCenterLeft, 
-            regionCenterLeft, regionCenterLeft, regionCenterLeft, regionCenterRight, regionCenterRight,*/
+            regionCenterLeft, regionCenterLeft, regionCenterLeft, regionCenterRight, regionCenterRight,
             regionCenterRight, regionRightColumns, regionRightColumns, regionRightColumns2, regionRightColumns3, 
             regionRightColumns4, regionRightColumns5, regionRightColumns6, regionRightColumns7, regionRightColumns8,
-            regionTrashCan, regionParsons, regionParsonsTurn, regionParsonsLeave, regionParsonsLeave, regionParsonsRight,
-            regionSprint, regionSprint, regionSprint, regionSprint, regionSprint, regionSprint};
+            regionTrashCan, regionParsons, regionParsonsTurn, regionParsonsLeave, regionParsonsLeave, 
+            regionParsonsRight, regionSprint, regionSprint, regionSprint, regionSprint, 
+            regionSprint, regionSprint, regionSprint};
         public int currentRegion = 0;
 
         public Map(Navigation nav)
@@ -85,7 +86,7 @@ namespace DrRobot.JaguarControl
 	        // Change hard code here to change map:
             navigation = nav;
 
-            numMapSegments = 257;
+            numMapSegments = 258;
             mapSegmentCorners = new double[numMapSegments, 2, 2];
             slopes = new double[numMapSegments];
             intercepts = new double[numMapSegments];
@@ -3039,10 +3040,20 @@ mapSegmentCorners[241, 1, 1] = -53.2399;
             #endregion
 
             // Parsons box
-            mapSegmentCorners[256, 0, 0] = mapSegmentCorners[251, 0, 0] - 3.4;
-            mapSegmentCorners[256, 0, 1] = mapSegmentCorners[251, 0, 1] + 1.35;
-            mapSegmentCorners[256, 1, 0] = mapSegmentCorners[251, 0, 0]  - 3.3;
-            mapSegmentCorners[256, 1, 1] = mapSegmentCorners[251, 0, 1] + 1.75;
+            //mapSegmentCorners[256, 0, 0] = mapSegmentCorners[251, 0, 0] - 3.4;
+            //mapSegmentCorners[256, 0, 1] = mapSegmentCorners[251, 0, 1] + 1.35;
+            //mapSegmentCorners[256, 1, 0] = mapSegmentCorners[251, 0, 0]  - 3.3;
+            //mapSegmentCorners[256, 1, 1] = mapSegmentCorners[251, 0, 1] + 1.75;
+
+            mapSegmentCorners[256, 0, 0] = 40.5;// mapSegmentCorners[251, 0, 0] + 17.04;
+            mapSegmentCorners[256, 0, 1] = mapSegmentCorners[251, 0, 1] + 1.57;
+            mapSegmentCorners[256, 1, 0] = 40.5;// mapSegmentCorners[251, 0, 0] + 17.04;
+            mapSegmentCorners[256, 1, 1] = mapSegmentCorners[251, 0, 1] + 1.57 + 0.203;
+
+            mapSegmentCorners[257, 0, 0] = 40-0.15;// mapSegmentCorners[251, 0, 0] + 16.15 - 0.1015;
+            mapSegmentCorners[257, 0, 1] = mapSegmentCorners[251, 0, 1] + 7.315;
+            mapSegmentCorners[257, 1, 0] = 40 + 0.15;// mapSegmentCorners[251, 0, 0] + 16.15 + 0.1015;
+            mapSegmentCorners[257, 1, 1] = mapSegmentCorners[251, 0, 1] + 7.315;
 
             // ****************** Additional Student Code: End   ************
 
