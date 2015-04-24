@@ -1145,7 +1145,8 @@
         private System.Windows.Forms.TextBox textBoxGPSRCV;
         private System.Windows.Forms.TextBox textBoxRCV;
         private System.Windows.Forms.Label label2;
-        private AxAXISMEDIACONTROLLib.AxAxisMediaControl myAMC;
+        public AxAXISMEDIACONTROLLib.AxAxisMediaControl myAMC; //Changed to public so it can be used in Navigation.cs
+                                                                //by the image processing code
         //public AxDRROBOTSentinelCONTROLLib.AxDDrRobotSentinel realJaguar; 
         public AxDRROBOTSentinelCONTROLLib.AxDDrRobotSentinel realJaguar;             //-wf
         public AxDDrRobotSentinel_Simulator simulatedJaguar;
