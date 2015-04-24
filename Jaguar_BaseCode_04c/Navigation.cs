@@ -1,9 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using System.IO;
+//  find color
+using System.Data;
+using System.Drawing;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
+using System.Windows.Forms;
+using WindowsFormsApplication3;
+using System.Runtime.InteropServices;
+using Microsoft.DirectX.DirectInput;
+using Emgu.CV;
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
+using Emgu.CV.UI;
+using Emgu.CV.GPU;
+//not sure we use this
+using Emgu.Util;
+using Emgu.CV.ML;
+using System.Diagnostics;
 
 namespace DrRobot.JaguarControl
 {
@@ -114,6 +137,48 @@ namespace DrRobot.JaguarControl
 
         #endregion
 
+ #region FindColor Variables
+        //The form size handelers need to be changed.
+        bool firstTimeResize = true;
+        int oFormWidth;
+        int oFormHeight;
+        int oTableLayoutPaneWidth;
+        int oTableLayoutPaneHeight;
+        Image<Bgr, Byte> imgOrigional;
+        Image<Gray, Byte> imgSmoothed;
+        Image<Gray, Byte> imgGrayFiltered;
+        Image<Gray, Byte> imgCanny;
+        Image<Bgr, Byte> imgCircles;
+        Image<Bgr, Byte> imgLines;
+        Image<Bgr, Byte> imgTrisRecPoly;
+        int hueMinVal = 0;
+        int hueMaxVal = 180;
+        int satMinVal = 0;
+        int satMaxVal = 255;
+
+        public AxAXISMEDIACONTROLLib.AxAxisMediaControl AMC;
+        private Emgu.CV.UI.ImageBox Gray;
+
+        bool robotCamOn = false;
+        //camera handlers
+        bool jaguarCamCapture = false;
+        bool fromFile = true;
+        #region robotCam
+        // using vars here instead of the xml that the other codebase uses
+        string robotName = "DrRobot";
+
+        string cameraIP = "192.168.0.65";
+        string cameraPort = "8081";
+        string cameraUname = "root";
+        string cameraPass = "drrobot";
+        private Capture _capture;
+        private bool streaming;
+        private static Process p1 = null;
+        // vars for robot control non existent
+        //slider variables
+
+
+        #endregion
 
         #region Navigation Setup
         
@@ -238,6 +303,37 @@ namespace DrRobot.JaguarControl
             // Run infinite Control Loop
             while (runThread)
             {
+            	//Try to process an image from the robot's camera
+            	 try
+                {
+                    //PictureBox pb1 = new PictureBox();
+                    //pb1.ImageLocation = "http://www.dotnetperls.com/favicon.ico";
+                    //pb1.SizeMode = PictureBoxSizeMode.AutoSize;
+                    //this.Controls.Add(pb1);
+                    
+                    //AMC.MediaUsername = cameraUname;
+                    //AMC.MediaPassword = cameraPass;
+                    //AMC.MediaType = "mjpeg";
+                    //AMC.MediaURL = "http://" + cameraIP + ":" + cameraPort + "/axis-cgi/mjpg/video.cgi";
+                    //Console.WriteLine(AMC.MediaURL);
+                    //AMC.Play();
+
+                   
+                    object buffer;
+                    int bufferSize;
+                    jaguarControl.myAMC.GetCurrentImage(0, out buffer, out bufferSize);
+                    Byte[] buf = new Byte[bufferSize];
+                    Array.Copy((Array)buffer, (Array)buf, bufferSize);
+                    Bitmap bmp;
+                    using (MemoryStream stream = new MemoryStream(buf))
+                        bmp = Bitmap.FromStream(stream) as Bitmap;
+                    Image<Bgr, Byte> image = new Image<Bgr, Byte>(bmp);
+                    imgOrigional = image;
+                    ProcessFrame(image);
+                    //Console.WriteLine("image yes");
+                }
+
+                catch {// Console.WriteLine("image no"); }
                 // ****************** Additional Student Code: Start ************
 
                 // Students can select what type of localization and control
@@ -579,6 +675,98 @@ namespace DrRobot.JaguarControl
 
 
         # region Control Functions
+//This function processes a given image. It finds the largest object with a given Hue and Saturation
+//and creates a Bounding Rectangle around it. The robot can localize based on the size and location 
+//of this Bounding Rectangle.
+public void ProcessFrame(Image<Bgr, Byte> frame)
+        {
+            Image<Hsv, Byte> hsvframe = frame.Convert<Hsv, Byte>();
+            Image<Gray, Byte> hueframe = hsvframe.Split()[0];
+            Image<Gray, Byte> satframe = hsvframe.Split()[1];
+
+            Gray huethreshl = new Gray(hueMinVal);
+            Gray huethreshu = new Gray(hueMaxVal);
+
+            if (hueMinVal > hueMaxVal)
+            {
+                Image<Gray, Byte> hueframelow = hueframe.InRange(new Gray(0), huethreshu);
+                Image<Gray, Byte> hueframehigh = hueframe.InRange(huethreshl, new Gray(180));
+                hueframe = hueframelow.Or(hueframehigh);
+            }
+            else
+            {
+                hueframe = hueframe.InRange(huethreshl, huethreshu);
+            }
+
+            Gray.Image = hueframe;
+            Gray satthreshl = new Gray(satMinVal);
+            Gray satthreshu = new Gray(satMaxVal);
+            satframe = satframe.InRange(satthreshl, satthreshu);
+
+
+            Image<Gray, Byte> blobframe = satframe.And(hueframe);
+            imgGrayFiltered = blobframe;
+
+            //blobframe = blobframe.Erode(2);
+            //blobframe = blobframe.Dilate(1);
+
+            // imgGrayFiltered = frame.Convert<Gray, Byte>();
+            imgSmoothed = imgGrayFiltered.PyrDown().PyrUp();
+            imgSmoothed._SmoothGaussian(3);
+
+            //about filteroncolor. do we implement it? or is it built in
+
+            //morevalriables
+            double dbgraycannythres = 160.0;
+            double dbgraycirclethres = 100.0;
+            double dbgraythreslinking = 80.0;
+            Gray graycannythres = new Gray(160);
+            Gray graycirclethres = new Gray(100);
+            Gray graythreslinking = new Gray(80);
+
+            imgCanny = imgSmoothed.Canny(dbgraycirclethres, dbgraythreslinking);
+
+            #region polygons
+            Contour<Point> contours = imgGrayFiltered.FindContours(); //find sequence of contours
+            List<Triangle2DF> fsttriangles = new List<Triangle2DF>();
+            List<MCvBox2D> fstrectangles = new List<MCvBox2D>();
+            List<Contour<Point>> fstpolygons = new List<Contour<Point>>();
+            //provided detection/////////////////////////////////////////////////
+            double largestArea = 0;
+            Contour<Point> largestContour = contours;
+            while (contours != null)
+            {
+                double nextArea = contours.Area;
+                if (nextArea > largestArea)
+                {
+                    largestArea = nextArea;
+                    largestContour = contours;
+                }
+                contours = contours.HNext;
+            }
+            if (largestContour != null)
+            {
+                Rectangle boundingRect = largestContour.BoundingRectangle;
+                imgTrisRecPoly = imgOrigional;
+                imgTrisRecPoly.Draw(boundingRect, new Bgr(Color.Yellow), 1);
+                imgTrisRecPoly.Draw(largestContour, new Bgr(Color.Green), 1);
+
+                System.Drawing.Size size = boundingRect.Size;
+                Console.WriteLine("the size is " + size);
+            }
+
+
+            #endregion
+            //assign variables
+            
+            //Original.Image = imgOrigional;
+            Gray.Image = imgGrayFiltered;
+           // Canny.Image = imgCanny;
+           // Circles.Image = imgCircles;
+           // Lines.Image = imgLines;
+           // RectPolys.Image = imgTrisRecPoly;
+             
+        }
 
         // This function is called at every iteration of the control loop
         // It will drive the robot forward or backward to position the robot 
