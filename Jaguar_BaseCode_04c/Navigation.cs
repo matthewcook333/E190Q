@@ -52,7 +52,7 @@ namespace DrRobot.JaguarControl
         public double robotRadius = 0.242;//0.232
         private double angleTravelled, distanceTravelled;
         private double diffEncoderPulseL, diffEncoderPulseR;
-        private double maxVelocity = 0.30;//0.23;//0.21;//0.21;//0.23;//0.21;//0.25;
+        private double maxVelocity = 0.35;//0.23;//0.21;//0.21;//0.23;//0.21;//0.25;
         private double Kpho = 1;
         private double Kalpha = 8;//4;//4;//8
         private double Kbeta = -0.5;//-0.5//-1.0;
@@ -148,7 +148,7 @@ namespace DrRobot.JaguarControl
         {
             initialX = map.xOffset + 3;// 20;//3;// 11;
             initialY = map.yOffset - 4;// 24.5;//4; //41;
-            initialT = -3.14;// -3.14;// 0
+            initialT = -3.14;// 0
 
             map.currentRegion = 0;
             currentWaypoint = 0;
@@ -784,7 +784,7 @@ namespace DrRobot.JaguarControl
                     ++map.currentRegion;
                     if (currentWaypoint >= 99)
                     {
-                        maxVelocity = 0.23;
+                        maxVelocity = 0.25;
                     }
                 }
                 //Thread.Sleep(2000);
