@@ -32,37 +32,38 @@ namespace DrRobot.JaguarControl
 	        // Change hard code here to change map:
 
             // count number of lines in CSV file
+            /*
             numMapSegments = File.ReadAllLines(@"C:\Users\mattcook\Desktop\extended_map3b.csv").Length;
             mapSegmentCorners = new double[numMapSegments, 2, 2];
             segmentSizes = new double[numMapSegments];
             slopes = new double[numMapSegments];
-            intercepts = new double[numMapSegments];
+            intercepts = new double[numMapSegments];*/
 
             // open CSV file
-            var reader = new StreamReader(File.OpenRead(@"C:\Users\mattcook\Desktop\extended_map3b.csv"));
-            int r = 0;
+            //var reader = new StreamReader(File.OpenRead(@"C:\Users\mattcook\Desktop\extended_map3b.csv"));
+            //int r = 0;
             // read line by line
-            while (!reader.EndOfStream)
-            {
-                var line = reader.ReadLine();
-                var values = line.Split(',');
-                mapSegmentCorners[r, 0, 0] = Convert.ToDouble(values[0]);
-                mapSegmentCorners[r, 0, 1] = Convert.ToDouble(values[1]);
-                mapSegmentCorners[r, 1, 0] = Convert.ToDouble(values[2]);
-                mapSegmentCorners[r, 1, 1] = Convert.ToDouble(values[3]);
-                if (r >= 0 && r < numMapSegments)
-                {
-                    Console.WriteLine("mapSegmentCorners[" + r + ", 0, 0] = " + mapSegmentCorners[r, 0, 0]);
-                    Console.WriteLine("mapSegmentCorners[" + r + ", 0, 1] = " + mapSegmentCorners[r, 0, 1]);
-                    Console.WriteLine("mapSegmentCorners[" + r + ", 1, 0] = " + mapSegmentCorners[r, 1, 0]);
-                    Console.WriteLine("mapSegmentCorners[" + r + ", 1, 1] = " + mapSegmentCorners[r, 1, 1]);
-                }
-                r++;
-            }
-            reader.Close();
+            //while (!reader.EndOfStream)
+            //{
+            //    var line = reader.ReadLine();
+            //    var values = line.Split(',');
+            //    mapSegmentCorners[r, 0, 0] = Convert.ToDouble(values[0]);
+            //    mapSegmentCorners[r, 0, 1] = Convert.ToDouble(values[1]);
+            //    mapSegmentCorners[r, 1, 0] = Convert.ToDouble(values[2]);
+            //    mapSegmentCorners[r, 1, 1] = Convert.ToDouble(values[3]);
+            //    if (r >= 0 && r < numMapSegments)
+            //    {
+            //        Console.WriteLine("mapSegmentCorners[" + r + ", 0, 0] = " + mapSegmentCorners[r, 0, 0]);
+            //        Console.WriteLine("mapSegmentCorners[" + r + ", 0, 1] = " + mapSegmentCorners[r, 0, 1]);
+            //        Console.WriteLine("mapSegmentCorners[" + r + ", 1, 0] = " + mapSegmentCorners[r, 1, 0]);
+            //        Console.WriteLine("mapSegmentCorners[" + r + ", 1, 1] = " + mapSegmentCorners[r, 1, 1]);
+            //    }
+            //    r++;
+            //}
+            //reader.Close();
 
 
-            /*
+            
 	        numMapSegments = 8;
             mapSegmentCorners = new double[numMapSegments, 2, 2];
             slopes = new double[numMapSegments];
@@ -107,7 +108,7 @@ namespace DrRobot.JaguarControl
             mapSegmentCorners[7, 0, 0] = 5.03 / 2;
             mapSegmentCorners[7, 0, 1] = -2.74 - 2.31;
             mapSegmentCorners[7, 1, 0] = -5.03/2;
-            mapSegmentCorners[7, 1, 1] = -2.74 - 2.31;*/
+            mapSegmentCorners[7, 1, 1] = -2.74 - 2.31;
             // ****************** Additional Student Code: End   ************
 
 

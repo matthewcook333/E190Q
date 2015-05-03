@@ -51,9 +51,9 @@ namespace DrRobot.JaguarControl
         public double robotRadius = 0.242;//0.232
         private double angleTravelled, distanceTravelled;
         private double diffEncoderPulseL, diffEncoderPulseR;
-        private double maxVelocity = 0.25;
+        private double maxVelocity = 1;// 0.25;
         private double Kpho = 1;
-        private double Kalpha = 2;//8
+        private double Kalpha = 8;//2;//8
         private double Kbeta = -0.5;//-0.5//-1.0;
         const double alphaTrackingAccuracy = 0.10;
         const double betaTrackingAccuracy = 0.1;
@@ -880,6 +880,30 @@ namespace DrRobot.JaguarControl
 
             }
              * */
+            
+            List<Node> filteredTraj = new List<Node>();
+            for (int k = 0; k < trajSize; ++k)
+            {
+                Node current = trajList[k];
+                filteredTraj.Add(current);
+                for (int j = trajSize - 1; j > k; --j)
+                {
+                    Node dest = trajList[j];
+                    if (!map.CollisionFound(current, dest, robotRadius))
+                    {
+                        Console.WriteLine("point " + j + " is at " + trajList[j].x + " " + trajList[j].y);
+                        k = j - 1;
+                        break;
+                    }
+                }
+            }
+            filteredTraj.Add(trajList[trajSize - 1]);
+            for (int k = 0; k < filteredTraj.Count; ++k)
+            {
+                trajList[k] = filteredTraj.ElementAt(k);
+            }
+            trajSize = filteredTraj.Count;
+             
             return;
         }
 
